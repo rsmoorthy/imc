@@ -4,17 +4,19 @@ import mpv_player_v0
 import time
 import threading
 import logging
+logging.basicConfig(level=logging.DEBUG)
 
 from queue import Queue
 from helper import synchronized, createPlayListEntry, checkPlaylist
-# import logging
+
+from includes import clipInt
 
 
 class PlayerCore():
     #Static variables
     #
     playerSync = threading.Semaphore()
-
+    cmdBlock = threading.Semaphore()
     # Callbacks/Hooks that need to be setup from outside
     #
     def screenSaverRun(self, mode):
@@ -34,7 +36,8 @@ class PlayerCore():
     def onPlayEnd(self, args):
         '''This function needs to be registered with the player event handler'''
         #TOOD: send command "end" to state machine
-        self.cmdQueue.put({'cmd':'end'})
+        self._sendCommand({'cmd':'end'})
+        #time.sleep(5) #to make sure it has been processed
 
 
     # Public methods
@@ -69,7 +72,7 @@ class PlayerCore():
 
     @synchronized(playerSync)
     def stop(self, args):
-        self.cmdQueue.put({'cmd':'stop'})
+        self._sendCommand({'cmd':'stop'})
 
     @synchronized(playerSync)
     def seek(self, time):
@@ -78,12 +81,29 @@ class PlayerCore():
     @synchronized(playerSync)
     def startSingle(self, path, tStart):
         playlist = createPlayListEntry(path, 0, tStart)
-        self.cmdQueue.put({'cmd':'play', 'playlist':playlist})
+        self._sendCommand({'cmd':'play', 'playlist':playlist})
         #sTODO: put playlist in queue for processing
 
     @synchronized(playerSync)
     def startPlaylist(self, playlist):
-        self.cmdQueue.put({'cmd':'play', 'playlist':playlist})
+        self._sendCommand({'cmd':'play', 'playlist':playlist})
+
+    @synchronized(playerSync)
+    def keyEnter(self, args):
+        self._sendCommand({'cmd':'enter'})
+
+    @synchronized(playerSync)
+    def keyNext(self, args):
+        self._sendCommand({'cmd':'next'})
+
+    #@synchronized(playerSync)
+    def keyPrevious(self, args):
+        self._sendCommand({'cmd':'previous'})
+
+    def _sendCommand(self, cmd):
+        self.cmdBlock.acquire()
+        self.cmdQueue.put(cmd)
+
 
     # Ques command interface to request functions of core player from multipe proceses
     #
@@ -93,6 +113,8 @@ class PlayerCore():
         lastState = "idle"
         entry = None
         entryId = 0
+        flags = {}
+        flags['next'] = False
 
         # try:
         while True:
@@ -132,11 +154,11 @@ class PlayerCore():
                             play = True
                         else:
                             logging.error("PlayerCore: playlist format error = {}".format(check))
-
+                self.cmdBlock.release()
             #Debug prints for state
             #
             if state != lastState:
-                logging.debug("PlayerCore: state = {} | enter = {} | stop = {} | next = {} | prev = {} | play = {} | end = {} | once = {} |"
+                logging.error("PlayerCore: state = {} | enter = {} | stop = {} | next = {} | prev = {} | play = {} | end = {} | once = {} |"
                     .format(state, enter, stop, next, previous, play, end, once))
 
                 lastState = state
@@ -147,7 +169,7 @@ class PlayerCore():
                 if play:
                     state = "pre"
                     entry = playlist[entryId]
-                    logging.debug("EntryyId play: {}".format(entryId))
+                    logging.error("EntryId play: {} / {}".format(entryId, entry))
 
             elif state == "pre":
                 if type(entry['pre']) == str and entry['pre'].lower() == "blackscreen":
@@ -162,6 +184,13 @@ class PlayerCore():
                 if enter:
                     enter = False
                     state = "play"
+                elif previous:
+                    previous = False
+                    entryId = clipInt(entryId - 1, 0, 99999)
+                    state = "idle"
+                elif next:
+                    next = False
+                    state = "end"
 
             elif state == "play":
                 path = entry['path']
@@ -170,13 +199,34 @@ class PlayerCore():
                 state = "waitEnd"
 
             elif state == "waitEnd":
-                if previous:
-                    state = "play"
-                elif next:
-                    state = "end"
-                elif end:
+                if end:
                     end = False
+                    previous = False
+                    next = False
                     state = "post"
+                    flags['next'] = False
+
+                elif previous:
+                    print("waitEnd: previous")
+                    previous = False
+                    state = "previousWait"
+                    self.player.stop()
+
+
+                elif next and not flags['next']:
+                    next = False
+                    flags['next'] = True
+                    self.player.stop()
+
+            elif state == "previousWait":
+                if end:
+                    end = False
+                    previous = False
+                    next = False
+                    state = "idle"
+                    entryId = clipInt(entryId - 1, 0, 99999)
+                    flags['next'] = False
+
 
             elif state == "post":
                 if type(entry['post']) == str and entry['post'].lower() == "repeat_once" and once == False:
@@ -220,7 +270,7 @@ class PlayerCore():
 
 
 if __name__ == "__main__":
-    # logging.basicConfig(level=logging.DEBUG)
+    #logging.basicConfig(level=logging.DEBUG)
     # import faulthandler
     # faulthandler.enable()
 
@@ -241,7 +291,7 @@ if __name__ == "__main__":
     core.screenSaverRun = screenSaver
     #core.player.start = playerstartdummy
 
-    testEnable = (0,0,0,0,1)
+    testEnable = (0,0,0,0,0,0,1)
 
     def waitPlayer():
         while not core.isPlaying():
@@ -302,7 +352,7 @@ if __name__ == "__main__":
         pList = createPlayListEntry("/home/thomas/Videos/b.mov", 0, 25)
         pList.update(createPlayListEntry("/home/thomas/Music/a.mp3", 1, 9*60-10))
         pList.update(createPlayListEntry("/home/thomas/Videos/a.mp4", 2, 6))
-        pList.update(createPlayListEntry("/home/thomas/Music/b.mp3", 3,  9*60-10))
+        pList.update(createPlayListEntry("/home/thomas/Music/b.mp3", 3,  9*60+40))
         core.startPlaylist(pList)
 
         time.sleep(2)
@@ -315,10 +365,51 @@ if __name__ == "__main__":
         waitPlayer()
         waitPlayer()
 
+    #Previous and next control
+    #
+    if testEnable[5] == 1:
+        pList = createPlayListEntry("/home/thomas/Videos/b.mov", 0, 25)
+        pList.update(createPlayListEntry("/home/thomas/Music/a.mp3", 1, 9*60-10))
+        pList.update(createPlayListEntry("/home/thomas/Videos/a.mp4", 2, 0))
+        #pList.update(createPlayListEntry("/home/thomas/Music/b.mp3", 3,  0))
+        core.startPlaylist(pList)
 
-    #Test5: use faulty playlists
+        #Firt b.mov is played
+        time.sleep(4)
 
+        #Execute previous, which should restart b.mov
+        core.keyPrevious(None)
+        time.sleep(4)
+        # #exectue next which should play a.mp3
+        core.keyNext(None)
+        time.sleep(4)
+        # #execute next which should play a.mp4
+        core.keyNext(None)
+        time.sleep(4)
+        # # #execute next which should play b.mp4
+        core.keyNext(None)
+        time.sleep(4)
+        # # #execute next which should stop the playback as there is nothing
+        core.keyNext(None)
+        time.sleep(4)
 
+    #Enter key control when waiting in pre=blackscreen t play next
+    #
+    if testEnable[6] == 1:
+        pList = createPlayListEntry("/home/thomas/Videos/b.mov", 0, 25)
+        pList.update(createPlayListEntry("/home/thomas/Videos/a.mp4", 1, 6))
+        pList[0]['pre'] = "blackscreen"
+        pList[1]['pre'] = "blackscreen"
+        core.startPlaylist(pList)
+
+        time.sleep(5)
+        core.keyEnter(None)
+
+        waitPlayer()
+
+        time.sleep(5)
+        core.keyEnter(None)
+        waitPlayer()
 
     while True:
         time.sleep(1)

@@ -14,6 +14,23 @@ def synchronized(lock):
     return wrapper
 
 
+def queuewait(var):
+    """ Synchronization decorator. """
+
+    def wrapper(f):
+        def syncFunc(*args, **kwargs):
+            var = True
+            try:
+                return f(*args, **kwargs)
+            finally:
+                while var:
+                    import time
+                    time.sleep(0.25)
+        return syncFunc
+    return wrapper
+
+
+
 
 
 '''

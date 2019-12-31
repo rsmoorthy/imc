@@ -49,6 +49,10 @@ class Player():
     def stop(self):
         self._execute({'command': ["quit"]})
 
+        #make sure function blocks antil process is killed !
+        while self._isPlaying:
+            time.sleep(0.25)
+
     def pause(self):
         self._execute({'command': ["set_property", "pause", True]})
 
@@ -125,7 +129,6 @@ class Player():
     def isPlaying(self):
         return self._isPlaying
 
-
     #
     # Private methods
     #
@@ -200,12 +203,12 @@ class Player():
             return
 
         while self.process.poll() == None:
-            time.sleep(1)
+            time.sleep(0.25)
 
 
         #-------------- End of playback ------------
-        self._isPlaying = False
         self.onPlayEnd(None)
+        self._isPlaying = False
 
 
     def killPlayer(self):
