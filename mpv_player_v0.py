@@ -4,12 +4,12 @@ import subprocess
 import os
 import socket
 import json
-from functools import partial
+import time
 
 from  subprocess import Popen, threading
-import time
-import includes
 
+import includes
+from helper import mpvParams
 
 """
 This is the media player we use for isha pi project.
@@ -71,7 +71,7 @@ class Player():
         self.path = path
         self._isPlaying = True
 
-        mpvParam = includes.mpvParams(tSeek, path)
+        mpvParam = mpvParams(tSeek, path, includes.config)
         self.process = Popen(mpvParam)
 
         self.playThread = threading.Thread(target = self._playWorkThread)

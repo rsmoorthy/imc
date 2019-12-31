@@ -7,9 +7,8 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 from queue import Queue
-from helper import synchronized, createPlayListEntry, checkPlaylist
+from helper import synchronized, createPlayListEntry, checkPlaylist, clipInt
 
-from includes import clipInt
 
 
 class PlayerCore():

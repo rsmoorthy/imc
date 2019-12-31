@@ -51,6 +51,9 @@ colors = {
     'lightblue' : hexColor('#035972'),
     'orange' : (1,0.5,0.2,0.5),
     'ishaOrange' : hexColor('#F15B28'),
+    #These are the main color used for the GUI
+    'imcBlue': hexColor('#063541'), #used for lines, deviders etc
+    'imcLigthGray': hexColor('#3d3d3d'), #used for lined, divider etc
     #error message colors
     'errMsgHead' : hexColor('#6c5d53'),
     'errMsgText' : hexColor('#ffffff'),
@@ -125,7 +128,7 @@ defaultConf = {
     },
     "playlist": {
         "rootdir": "/mnt/Ishamedia",
-        "types": "json"
+        "types": "imc,json"
     },
     "video": {
         "rootdir": "/mnt/Ishamedia",
@@ -211,51 +214,3 @@ def writeDb():
 #
 # Some utilities and helpers
 #
-def clipInt(value, min, max):
-    if value > max:
-        return max
-
-    if value < min:
-        return min
-
-    return value
-
-def rotateInt(value, min, max):
-    if value > max:
-        return min
-
-    if value < min:
-        return max
-
-    return value
-
-
-def isRemoteCtrlCmd(cmd):
-    if not 'cmd' in cmd:
-        return False
-
-    return True
-
-
-def mpvParams(start, path):
-    tmp = []
-    mpvParams = config['mpv']['parameters']
-
-    for item in mpvParams:
-
-        if "{start}" in item:
-            tmp.append(item.format(start=start))
-
-        elif "{path}" in item:
-            tmp.append(item.format(path=path))
-
-        elif "{socket}" in item:
-            sock = os.path.join(config['tmpdir'], 'socket')
-            tmp.append(item.format(socket=sock))
-
-        # elif "{configFile}" in item:
-        #     item = item.format(configFile=config)
-        else:
-            tmp.append(item)
-
-    return tmp
