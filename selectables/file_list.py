@@ -104,10 +104,11 @@ class FileList(SelectListView):
 
         #If we selected directory we jump into it to see the file in it
         elif os.path.isdir(path):
-            self.layout.clear_widgets()
-
             self.dirTree.append(self.widgets[self.wId].text)
+
+            self.layout.clear_widgets()
             self.widgets = []
+
             self._addFiles(path, True)
 
     def _getDirsAndDocs(self, path):
@@ -148,6 +149,7 @@ class FileList(SelectListView):
            path information
 
         '''
+        logging.error(f"Thomas: is subdir {isSubdir}")
         if isSubdir and self.showDirs:
             self.add("...", True)
 

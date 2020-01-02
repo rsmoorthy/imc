@@ -14,9 +14,8 @@ class SelectListViewItem(StackLayout, Select):
     fillerColor = ObjectProperty(includes.styles['defaultFiller'])
 
     def resize(self, widget, value):
-        self.label.width = self.parent.width-self.imgWidth-self.filler.width
+        self.label.width = value[0] - self.imgWidth - self.padding[0]
         self.label.text_size = (self.label.width-20, self.imgHeight)
-        pass
 
     def enable(self, args):
         self.label.enable(args)
@@ -41,38 +40,18 @@ class SelectListViewItem(StackLayout, Select):
         self.size_hint_y = None
 
         super(SelectListViewItem, self).__init__(**kwargs)
+        self.padding = [20, 0, 0, 0]
 
-        self.filler = SelectLabelBg(
-            size_hint_x=None,
-            width=10,
-            size_hint_y=None,
+        self.image = ImageBg(
+            background_color=self.background_color,
+            width=self.imgWidth,
+            size_hint=(None, None),
             height=self.imgHeight,
-            id="-1",
-            text_size=(0, 0),
-            background_color=self.fillerColor
+            source=self.source
         )
-        self.add_widget(self.filler)
+        self.add_widget(self.image)
 
-        if self.source and self.showIcon:
-            self.image = ImageBg(
-                background_color=self.background_color,
-                width=self.imgWidth,
-                size_hint=(None, None),
-                height=self.imgHeight,
-                source=self.source
-            )
-            self.add_widget(self.image)
-
-        elif not self.source and self.showIcon:
-            self.image = SelectLabelBg(
-                width=self.imgWidth,
-                size_hint=(None, None),
-                height=self.imgHeight,
-                background_color=self.background_color,
-            )
-            self.add_widget(self.image)
-
-        labelWidth = self.widthParent-self.imgWidth-self.filler.width
+        labelWidth = self.width - self.imgWidth
         self.label = SelectLabelBg(
             background_color=self.background_color,
             text_size=(labelWidth-20, self.imgHeight),
@@ -88,7 +67,7 @@ class SelectListViewItem(StackLayout, Select):
         )
 
         self.add_widget(self.label)
-        self.bind(width=self.resize)
+        self.bind(size=self.resize)
 
 
 class SelectListView(Select, ScrollView):
@@ -224,11 +203,6 @@ class SelectListView(Select, ScrollView):
         self.itemColor1 = kwargs.pop('itemColor1', includes.styles['itemColor1'])
         self.showIcon = kwargs.pop('showIcon', True)
 
-        #self.startId = int(kwargs['id']) + 1 #TODO: is this needed?
-        # if not self.startId:
-        #     logging.error("start id not set")
-        #     return
-
         super(SelectListView, self).__init__(**kwargs)
 
         self.wId = 0
@@ -239,3 +213,56 @@ class SelectListView(Select, ScrollView):
         self.add_widget(self.layout)
         self.bind(enaColor=self.changeColor)
         self.bind(pos=self._changePos)
+
+
+
+
+def TestSelectListviewItem():
+    '''
+    Standalone test:
+    List and traverse /mnt/Ishamedia
+    '''
+    from kivy.core.window import Window
+    from kivy.app import App
+
+    class Main(App):
+        def testFunc(self):
+            import time
+            time.sleep(2)
+
+        def build(self):
+            self.obj = SelectListViewItem(
+                enaColor=(1,0,0,1),
+                source="atlas://resources/img/pi-player/dir",
+                background_color=(0,0,0,1),
+                text="I am a single element",
+                imgWidth=50,
+                imgHeight=50,
+                fillerColor=(0,1,0,1),
+                showIcon=True,
+            )
+
+            self.obj1 = SelectListViewItem(
+                enaColor=(1,0,0,1),
+                source="atlas://resources/img/pi-player/dir",
+                background_color=(0,0,0,1),
+                text="I am another element",
+                imgWidth=50,
+                imgHeight=50,
+                fillerColor=(0,1,0,1),
+                showIcon=True,
+            )
+
+            self.obj.enable(None)
+            self.layout = GridLayout(cols=1, spacing=0, size_hint_y=None)
+            self.layout.add_widget(self.obj)
+            self.layout.add_widget(self.obj1)
+
+            from  subprocess import threading
+            workThread = threading.Thread(target=self.testFunc)
+            workThread.setDaemon(True)
+            workThread.start()
+
+            return self.layout
+
+    Main().run()

@@ -14,4 +14,7 @@ if sys.argv[1] == "playlistview":
 
 if sys.argv[1] == "imagebg":
     testImageBg()
-    
+
+if sys.argv[1] == "selectviewItem":
+    from selectables.select_list_view import TestSelectListviewItem
+    TestSelectListviewItem()

@@ -62,9 +62,14 @@ CONTROL_TREE = {
             {'nextid':selectId['settings']}
         ],
         "right":[
-            {'func':'disable', 'id':selectId['root'], 'args':selectId['system']},
-            {'func':'enable', 'id':selectId['systemMsg']},
-            {'nextid':selectId['systemMsg']}
+            {
+                'func':'enable',
+                'id':selectId['systemMsg'],
+                'false': [
+                    {'func':'disable', 'id':selectId['root'], 'args':selectId['system']},
+                    {'nextid':selectId['systemMsg']},
+                 ]
+            },
         ],
     },
     #
@@ -82,7 +87,16 @@ CONTROL_TREE = {
             }
 
         ],
-        "enter":[{'func':'enter', 'id':selectId['systemMsg']}],
+        "enter":[
+            {
+                'func':'enter',
+                'id':selectId['systemMsg'],
+                'true':[
+                    {'func':'enable', 'id':selectId['root'], 'args':selectId['system']},
+                    {'nextid':selectId['system']},
+                ],
+            }
+        ],
         "left":[{
                 'func':'left',
                 'id':selectId['systemMsg'],

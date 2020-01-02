@@ -24,11 +24,11 @@ def msgAutoRestart(handler, autoReplay, text, headerText, height, dId):
 
     btn = [
         {
-            'imgPath':'close',
+            'imgPath':'dialogClose',
             'callback':closeCallback
         },
         {
-            'imgPath':'small_play',
+            'imgPath':'dialogPlay',
             'callback':autoReplay
         }
     ]
@@ -37,10 +37,9 @@ def msgAutoRestart(handler, autoReplay, text, headerText, height, dId):
         borderHeight=includes.styles['dialogBorderHeight'],
         headerHeight=40,
         contentHeight=height,
-        headerColor=includes.colors['warnMsgHead'],
-        contentColor=includes.colors['warnMsgContent'],
-        sidebarColor=includes.colors['warnMsgSidebar'],
-        textColor=includes.colors['warnMsgText'],
+        headerColor=includes.styles['dialogMsgHead'],
+        contentColor=includes.styles['dialogMsgContent'],
+        textColor=includes.styles['dialogMsgText'],
         text=text,
         headerText=headerText,
         buttonDesc=btn,
@@ -113,7 +112,8 @@ class DialogButtons(GridLayout):
 
         super(DialogButtons, self).__init__(**kwargs)
         self.rows = 1
-        self.spacing = 5
+        self.spacing = 10
+        self.padding = (10,0,0,0)
 
         with self.canvas:
             Color(*self.bgColor)
@@ -128,16 +128,19 @@ class DialogButtons(GridLayout):
 
         self.btnList = []
         self.callbackList = []
+
         for node in buttonDesc:
             if len(buttonDesc) > 0 and node is not None:
                 self.callbackList.append(node['callback'])
                 self.btnList.append(
                     SelectButton(
-                        imgPath= "atlas://resources/img/pi-player/" + node['imgPath'],
+                        source= "atlas://resources/img/pi-player/" + node['imgPath'],
                         height=self.height,
                         size_hint_y=None,
                         size_hint_x=None,
-                        width=100
+                        width=self.height,
+                        background_color=includes.styles['menuBarColor'],
+                        enaColor=includes.styles['enaColor0']
                     )
                 )
 
@@ -154,26 +157,22 @@ class DialogButtons(GridLayout):
 
 
 class Dialog(GridLayout):
-    content = None
-    sidebar = None
-    headterText = None
-    text = None
-    cotentColor = None
-    sidebarColor = None
-    textColor = None
-    btn = None
-    contentColor = None
-    sidebarColor = None
-    textColor = None
-    headerColor = None
-    headerHeight = None
-    contentHeight = None
-    headerText = None
-    text = None
-    borderHeight = None
-    sidebarWidth = None
-    buttonDesc = None
-    dId = -1
+    # content = None
+    # sidebar = None
+    # headterText = None
+    # text = None
+    # textColor = None
+    # btn = None
+    # contentColor = None
+    # headerColor = None
+    # headerHeight = None
+    # contentHeight = None
+    # headerText = None
+    # text = None
+    # borderHeight = None
+    # sidebarWidth = None
+    # buttonDesc = None
+    # dId = -1
 
     def enable(self, args):
         return self.btn.enable(args)
@@ -192,7 +191,6 @@ class Dialog(GridLayout):
 
     def __init__(self, **kwargs):
         self.contentColor = kwargs.pop('contentColor', (1, 1, 1, 1))
-        self.sidebarColor = kwargs.pop('sidebarColor', (1, 1, 1, 1))
         self.textColor = kwargs.pop('textColor', (1, 1, 1, 1))
         self.headerColor = kwargs.pop('headerColor', (1, 1, 1, 1))
         self.headerHeight = kwargs.pop('headerHeight', 50)
@@ -206,7 +204,7 @@ class Dialog(GridLayout):
 
         super(Dialog, self).__init__()
 
-        self.cols = 2
+        self.cols = 1
 
         if self.buttonDesc is not None:
             self.rows = 4
@@ -216,38 +214,16 @@ class Dialog(GridLayout):
         self.headerContent = SelectLabelBg(
             background_color=self.headerColor,
             text=self.headerText,
-            size_hint=(1.0, None),
+            size_hint_y=None,
             height=self.headerHeight,
             color=self.textColor,
             valign="middle",
-            halign="left"
-        )
-
-        self.sidebar = SelectLabelBg(
-            background_color=self.sidebarColor,
-            color=self.sidebarColor,
-            text="a",
-            size_hint=(None, None),
-            width=self.sidebarWidth,
-            height=self.headerHeight
+            halign="left",
+            padding=[20, 0]
         )
 
 
-        #TODO: does this parent thing make actually sense?
-        if self.parent is not None:
-            tmpWidth = self.parent.width - self.sidebar.width
-        else:
-            tmpWidth = Window.width - self.sidebar.width - 20
-        self.headerContent.text_size = (tmpWidth, self.headerHeight)
-
-        #Row 2:
-        self.sidebarContent = SelectLabelBg(
-            background_color=self.sidebarColor,
-            text="",
-            size_hint=(None, None),
-            width=self.sidebarWidth,
-            height=self.contentHeight
-        )
+        self.add_widget(self.headerContent)
 
         self.content = SelectLabelBg(
             background_color=self.contentColor,
@@ -256,57 +232,25 @@ class Dialog(GridLayout):
             halign="justify",
             valign="top",
             size_hint_y=None,
-            height=self.contentHeight
+            height=self.contentHeight,
+            padding=[20, 0]
         )
-
-        #row 3
-        self.border = SelectLabelBg(
-            background_color=includes.colors['msgBorder'],
-            size_hint_y=None,
-            height=self.borderHeight,
-        )
-
-        self.sidebarBorder = SelectLabelBg(
-            background_color=includes.colors['msgBorder'],
-            text="",
-            size_hint=(None, None),
-            width=self.sidebarWidth,
-            height=self.borderHeight
-        )
-
-        self.content.text_size = (tmpWidth, self.contentHeight - 20)
-
-        self.size_hint_y = None
-        self.height = self.headerHeight + self.contentHeight + self.border.height
-
-        self.add_widget(self.sidebar)
-        self.add_widget(self.headerContent)
-
-        self.add_widget(self.sidebarContent)
         self.add_widget(self.content)
 
         if self.buttonDesc is not None:
-            self.sidebarBtn = SelectLabelBg(
-                background_color=self.sidebarColor,
-                text="",
-                size_hint=(None, None),
-                width=self.sidebarWidth,
-                height=37.5
-            )
-            self.add_widget(self.sidebarBtn)
-
             self.btn = DialogButtons(
                 buttonDesc=self.buttonDesc,
                 bgColor=self.contentColor,
                 size_hint_y=None,
-                height=37.5,
+                height=40,
                 id=self.id
             )
             self.add_widget(self.btn)
-            self.height = self.headerHeight + self.contentHeight + self.border.height + self.sidebarBtn.height
+            self.height = self.headerHeight + self.contentHeight
+            #self.height = self.headerHeight + self.contentHeight + self.border.height + self.sidebarBtn.height
 
-        self.add_widget(self.sidebarBorder)
-        self.add_widget(self.border)
+        #self.add_widget(self.sidebarBorder)
+        #self.add_widget(self.border)
 
 
 class DialogHandler(StackLayout, Select):

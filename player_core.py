@@ -116,9 +116,29 @@ class PlayerCore():
         flags['next'] = False
 
         # try:
+        cnt = 0
+        cnt1 = 0
+
         while True:
             #read next entry of queue blocking style
             time.sleep(0.25)
+            cnt = cnt + 0.25
+
+            if cnt >= 1:
+                cnt = 0
+                cnt1 = cnt1 + 1
+
+                if self.isPlaying() and (cnt1 % self._runtimeInterval) == 0:
+                    runtime = self.getRuntime()
+                    path =self.getCurrentFile()
+
+                    if self._db != None and self._writeDb != None:
+                        self._db['runtime'] = runtime
+                        self._db['mediaPath'] = path
+                        self._writeDb()
+                    else:
+                        logging.error("PlayerCore: wrtieDB callback and db object not set")
+
             if not self.cmdQueue.empty():
                 cmd = self.cmdQueue.get()
 
@@ -144,6 +164,11 @@ class PlayerCore():
 
                 elif cmd['cmd'] == "end":
                     end = True
+                    logging.error(f"Thomas: end called  _Db = {self._db} / {self._writeDb}")
+                    if self._db != None and self._writeDb != None:
+                        self._db['runtime'] = 0
+                        self._db['mediaPath'] = path
+                        self._writeDb()
 
                 elif cmd['cmd'] == "play":
                     if not play:
@@ -255,6 +280,9 @@ class PlayerCore():
 
 
     def __init__(self, **kwargs):
+        self._runtimeInterval = kwargs.pop('runtimeInterval', 1)
+        self._db = kwargs.pop('db', None)
+        self._writeDb = kwargs.pop('writeDb', None)
         #self.player = vlc_player.Player() #TODO: In the fucture we could maske this selection via settings to chooce differernt players.
         self.player = mpv_player_v0.Player() #TODO: In the fucture we could maske this selection via settings to chooce differernt players.
         self.player.addEndHandler(self.onPlayEnd)

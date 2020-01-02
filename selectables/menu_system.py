@@ -32,7 +32,8 @@ class MenuSystem(StackLayout):
 
         return myIp
 
-    def callbackPlayfile(self, args):
+    def callbackPlaySingle(self, args):
+        logging.error("MenuSystem: callbackPlaySingle has not been assigned to player...")
         pass
 
     def getCpuTemp(self):#TODO: for pi we can use the command line tool provided
@@ -75,25 +76,17 @@ class MenuSystem(StackLayout):
             self.ipAddress.text="IP WiFi:  [color=#0f85a5]{}[/color]".format(self.getIpAddress())
 
             #Player values
-            if includes.playerCore.isPlaying():
-                runtime = includes.playerCore.getRuntime()
-                path = includes.playerCore.getCurrentFile()
-
-                if runtime % includes.config['settings']['runtimeInterval'] == 0:
-                    includes.db['runtime'] = runtime
-                    includes.db['mediaPath'] = path
-                    includes.writeDb()
+            
 
 
     def _autoReplay(self, id):
-        logging.error("THomas------------autoReplay")
-        tmp = {
-            'path':includes.db['mediaPath'],
-            'start':includes.db['runtime']
-        }
+        try:
+            self.callbackPlaySingle(includes.db['mediaPath'], int(includes.db['runtime']))
+            self.handler._removeDialog(self.systemCrashedId)
+        except:
+            logging.error("MenuSystem: could not start playback for auto restart")
 
-        self.callbackPlayfile(tmp)
-        self.handler._removeDialog(id)
+
 
     def _reboot(self, args):
         logging.error("TODO: reboot the system")
@@ -111,6 +104,7 @@ class MenuSystem(StackLayout):
     def __init__(self, **kwargs):
         self.fontSize = kwargs.pop('fontSize', 20)
         self.mainMenu = kwargs.pop("mainMenu", None)
+        self.systemCrashedId = -1
 
         if self.mainMenu is None:
             logging.error("MenuSystem: __init__: mainMenu not defined....")
@@ -167,7 +161,7 @@ class MenuSystem(StackLayout):
             text += "Timestamp = {}".format(timeText)
 
             nid = self.handler.getNextId()
-            logging.debug("MenuSystem: nid = {}".format(nid))
+            #logging.debug("MenuSystem: nid = {}".format(nid))
             tmpDialog = msgAutoRestart(self.handler, self._autoReplay, text, headerText, 90, nid)
 
             self.handler.add(tmpDialog[0])

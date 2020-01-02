@@ -37,6 +37,7 @@ defined = True
 
 #Color definition
 colors = {
+    'white': (1,1,1,1),
     'gray': (0.4,0.4,0.4,1),
     'darkgray': (0.2,0.2,0.2,1),
     'darkestgray': (0.1,0.1,0.1,1),
@@ -55,38 +56,7 @@ colors = {
     'imcBlue': hexColor('#063541'), #used for lines, deviders etc
     'imcLigthGray': hexColor('#3d3d3d'), #used for lined, divider etc
     'imcDarkGray': hexColor('#2c2c2c'), #used for lined, divider etc
-    #error message colors
-    'errMsgHead' : hexColor('#6c5d53'),
-    'errMsgText' : hexColor('#ffffff'),
-    'errMsgSidebar' : hexColor('#483e37'),
-    'errMsgContent' : hexColor('#917c6f'),
-    #warning message colors
-    'warnMsgHead' : hexColor('#536c5d'),
-    'warnMsgText' : hexColor('#ffffff'),
-    'warnMsgSidebar' : hexColor('#37483e'),
-    'warnMsgContent' : hexColor('#6f917c'),
-    #info message colors
-    'infoMsgHead' : hexColor('#216778'),
-    'infoMsgText' : hexColor('#ffffff'),
-    'infoMsgSidebar' : hexColor('#164450'),
-    'infoMsgContent' : hexColor('#2c89a0'),
-    'msgBorder' : hexColor('#303030'),
-    # #error message colors
-    # 'errMsgHead' : hexColor('#ffc8be'),
-    # 'errMsgText' : hexColor('#000000'),
-    # 'errMsgSidebar' : hexColor('#fda798'),
-    # 'errMsgContent' : hexColor('#ffd8d2'),
-    # #warning message colors
-    # 'warnMsgHead' : hexColor('#ffe78d'),
-    # 'warnMsgText' : hexColor('#000000'),
-    # 'warnMsgSidebar' : hexColor('#ffd965'),
-    # 'warnMsgContent' : hexColor('#ffeeaa'),
-    # #info message colors
-    # 'infoMsgHead' : hexColor('#5599ff'),
-    # 'infoMsgText' : hexColor('#000000'),
-    # 'infoMsgSidebar' : hexColor('#2a7fff'),
-    # 'infoMsgContent' : hexColor('#80b3ff'),
-    # 'msgBorder' : hexColor('#666666')
+
 }
 
 styles = {
@@ -114,7 +84,11 @@ styles = {
     'dialogBorderHeight': 5,
     #Playlist color Indicator
     'pListIndiactorHeight':25,
-    'plistIndicatorColor':colors['darkblue']
+    'plistIndicatorColor':colors['darkblue'],
+    #dialog message colors
+    'dialogMsgHead' : colors['imcDarkGray'],
+    'dialogMsgText' : colors['white'],
+    'dialogMsgContent' : colors['imcLigthGray'],
 }
 
 #Media player instance we can use in all modules

@@ -239,9 +239,14 @@ class MainMenu(ImcTabview):
         includes.screenSaver = self.screenSaver
 
         #Setup the player core as global object
-        includes.playerCore = PlayerCore()
+        includes.playerCore = PlayerCore(
+            runtimeInterval=includes.config['settings']['runtimeInterval'],
+            writeDb=includes.writeDb,
+            db=includes.db
+        )
         includes.playerCore.activateColorBar = includes.changeFooterColor
         includes.playerCore.screenSaverRun = self.screenSaver.start
+
 
         #Shutdown screen setup
         self.menuShutdown = MenuShutdown(screenManager=self.root)
@@ -257,6 +262,7 @@ class MainMenu(ImcTabview):
 
         #System Menu setup
         self.menuSystem = MenuSystem(mainMenu=self)
+        self.menuSystem.callbackPlaySingle = includes.playerCore.startSingle
         self.setContent(selectId['system'], self.menuSystem)
 
         #TODO:
