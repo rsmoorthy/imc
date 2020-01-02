@@ -172,13 +172,27 @@ class PlaylistMenu(GridLayout):
         self.playlistMediaFilesContent.deactivate(None)
         self.playlistFilesContent.disable(None)
 
+
     def keyEnter(self, args):
         if self.isEnabled:
             if self.mode == self._MODE_FILE:
                 self.playlistFilesContent.keyEnter(None)
 
             elif self.mode == self._MODE_MEDIA:
-                self.playlistMediaFilesContent.keyEnter(None)
+                tmpData = self.playlistData
+                newPlaylist = {}
+                tmpRange = range(self.playlistMediaFilesContent.wId, len(self.playlistData))
+                logging.error(f"thomas:------------------ {tmpRange}")
+
+                k = 0
+                for i in tmpRange:
+                    logging.error(f"thomas: -----------i = {i}")
+                    newPlaylist[str(k)] = (self.playlistData[str(i)])
+                    k = k + 1
+
+                self.player_start_handler(newPlaylist)
+
+
 
 
     def keyUp(self, args):
@@ -212,7 +226,9 @@ class PlaylistMenu(GridLayout):
 
     def keyRight(self, args):
         if self.isEnabled:
-            if self.mode == self._MODE_FILE:
+            widCnt = len(self.playlistMediaFilesContent.widgets)
+
+            if self.mode == self._MODE_FILE and widCnt > 0:
                 self.mode = self._MODE_MEDIA
                 self.playlistFilesContent.disable(None)
                 self.playlistMediaFilesContent.activate(None)
@@ -234,8 +250,10 @@ class PlaylistMenu(GridLayout):
 
 
     def _updateJsonFiles(self, path):
+
         if os.path.isdir(path):
             return
+
         try:
             with open(path) as playFile:
                 self.playlistData = json.load(playFile)
@@ -285,10 +303,8 @@ class PlaylistMenu(GridLayout):
         '''This function is called when we press enter on the playlist file list
         It must return the dict object of the playlist that should be played'''
         ret = self._updateJsonFiles(path)
-
         if ret:
-            if self._validateJson(path) == 0:
-                return ret
+            return self.playlistData
 
         return None
 
@@ -299,16 +315,13 @@ class PlaylistMenu(GridLayout):
 
         path = self.playlistFilesContent._getCurPath()
         path = os.path.join(path, widget.text)
+        logging.error(f"Thomas: media update....{path}")
 
         if os.path.isdir(path) or widget.text == "...":
             self.playlistMediaFilesContent.clearWidgets()
             return
 
         ret = self._updateJsonFiles(path)
-
-        if ret:
-            self._validateJson(path)
-
 
     def __init__(self, **kwargs):
         self.isEnabled = False

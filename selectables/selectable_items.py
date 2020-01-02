@@ -777,6 +777,7 @@ class SelectSpinner(GridLayout, Select):
             source="atlas://resources/img/pi-player/arrow_left",
             margin=[offY-35/4,0,0,0],
             opacity=self.opac,
+            background_color=(0,0,0,0)
         )
 
         self.rArrow = ImageBg(
@@ -786,6 +787,7 @@ class SelectSpinner(GridLayout, Select):
             source="atlas://resources/img/pi-player/arrow_right",
             margin=[offY-35/4,0,0,0],
             opacity=self.opac,
+            background_color=(0,0,0,0)
         )
 
         self.label = SelectLabel(

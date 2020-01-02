@@ -167,7 +167,7 @@ CONTROL_TREE = {
             },
             ],
         "home": [
-            {'func':'home',
+            {'func':'keyHome',
              'id':selectId['vFiles'],
              'true':[
                      {'func':'enable', 'id':selectId['root'], 'args':selectId['system']},
@@ -286,8 +286,11 @@ CONTROL_TREE = {
          "right": [{'func':'keyRight', 'id':selectId['pFiles']}],
          "enter": [{'func':'keyEnter', 'id':selectId['pFiles']}],
          "back": [{'func':'keyBack', 'id':selectId['pFiles']}], #TODO: this is not complete
-         "home": [{'func':'keyHome', 'id':selectId['pFiles']}], #TODO: this is not complete
-         "type":"pFiless",
+         "home": [
+            {'func':'enable', 'id':selectId['root'], 'args':selectId['system']},
+            {'func':'keyHome', 'id':selectId['pFiles']},
+            {'nextid':selectId['system']}
+        ],
     },
     #
     #Settnigs button

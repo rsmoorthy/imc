@@ -5,6 +5,7 @@ from kivy.core.window import Window
 from kivy.logger import Logger
 
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
+from selectables.menu_video_audio import MenuVideoAudio
 
 import os
 import  http.server
@@ -271,26 +272,30 @@ class MainMenu(ImcTabview):
         # self.selectableWidgets[selectId['systemBtn']] = self.menuSystem.btn
 
         #Video FIle menu
-        self.menuVideo = FileList(
+        self.menuVideo = MenuVideoAudio(
                 #id="0",
                 rootdir=includes.config['video']['rootdir'],
                 enaColor=includes.styles['enaColor0'],
-                bar_width=10,
+                bar_width=0,
                 supportedTypes=includes.config['video']['types'],
                 type="video",
-                playerStartHandler=includes.playerCore.startPlaylist
+                playerStartHandler=includes.playerCore.startPlaylist,
+                line_color=includes.colors['imcBlue'],
+                text="Video Files"
         )
         self.setContent(selectId['videos'], self.menuVideo)
 
         #music File menu
-        self.menuMusic = FileList(
+        self.menuMusic = MenuVideoAudio(
                 #id="0",
                 rootdir=includes.config['music']['rootdir'],
                 enaColor=includes.styles['enaColor0'],
-                bar_width=10,
+                bar_width=0,
                 supportedTypes=includes.config['music']['types'],
                 type="music",
-                playerStartHandler=includes.playerCore.startPlaylist
+                playerStartHandler=includes.playerCore.startPlaylist,
+                line_color=includes.colors['imcBlue'],
+                text="Music Files"
         )
         self.setContent(selectId['music'], self.menuMusic)
 
@@ -304,7 +309,7 @@ class MainMenu(ImcTabview):
             font_size=includes.styles['fontSize'],
             rootdir=includes.config['playlist']['rootdir'],
             supported_types=includes.config['playlist']['types'],
-            player_start_handler=includes.playerCore,
+            player_start_handler=includes.playerCore.startPlaylist,
         )
         self.setContent(selectId['playlist'], self.menuPlaylist)
 

@@ -38,7 +38,7 @@ start: start the video from a specified time value in seconds.
 '''
 def createPlayListEntry(path, nodeId, start):
     tmp = {
-        int(nodeId):{
+        str(nodeId):{
             'path': path,
             'pre' : None,
             'post' : None,
@@ -60,7 +60,7 @@ def checkPlaylist(playlist):
     try:
         #Check if its consecutive numbers, if key does not exist exception !
         for i in range(len(playlist)):
-            tmp = playlist[i]
+            tmp = playlist[str(i)]
     except:
         return ("PlaylistCheck: Indicies are not in sequential order", -1)
 

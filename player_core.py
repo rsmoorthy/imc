@@ -193,7 +193,7 @@ class PlayerCore():
             if state == "idle":
                 if play:
                     state = "pre"
-                    entry = playlist[entryId]
+                    entry = playlist[str(entryId)]
                     logging.error("EntryId play: {} / {}".format(entryId, entry))
 
             elif state == "pre":

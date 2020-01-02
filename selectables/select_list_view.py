@@ -75,6 +75,7 @@ class SelectListView(Select, ScrollView):
 
     def clearWidgets(self):
         self.layout.clear_widgets()
+        self.widgets = []
 
     def keyDownHook(self, **kwargs):
         pass
@@ -125,6 +126,8 @@ class SelectListView(Select, ScrollView):
             increment = True
             disTop = True
 
+
+
         if self.wId >= 1:
             self.widgets[self.wId].disable(None)
 
@@ -139,6 +142,7 @@ class SelectListView(Select, ScrollView):
             self.wId = len(self.widgets)-1
             self.widgets[self.wId].enable(None)
             self.scroll_to(self.widgets[self.wId])
+            self.keyUpHook(wId=self.wId, widget=self.widgets[self.wId])
             return True
 
         self.keyUpHook(wId=self.wId, widget=self.widgets[self.wId])

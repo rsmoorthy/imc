@@ -54,6 +54,8 @@ class FileList(SelectListView):
         path = self._getCurPath()
         path = os.path.join(path, self.widgets[self.wId].text)
 
+
+
         #jump to previous directory, if we are in any sub directory
         if self.widgets[self.wId].text == "...":
             tmp = self.dirTree.pop(len(self.dirTree)-1)
@@ -92,6 +94,7 @@ class FileList(SelectListView):
                     )
 
             elif self.type == "playlist":
+                logging.error(f"Thomas: --------------------- path = {path}")
                 if self.plistHook is not None:
                     playlist = self.plistHook(path)
 

@@ -35,6 +35,7 @@ class KeyHandler():
 		self.scancodes[25] = "power" #TODO: right now its P key for testing
 		self.scancodes[27] = "+"
 		self.scancodes[28] = "enter"
+		self.scancodes[35] = "home"
 		self.scancodes[50] = "m"
 		self.scancodes[53] = "-"
 		self.scancodes[88] = "home"

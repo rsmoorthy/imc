@@ -77,7 +77,7 @@ styles = {
     'headerColor0': colors['darkblue'],
     'headerColor1': colors['gray'],
     #sizes
-    'selectItemHeight': 80,
+    'selectItemHeight': 60,
     "fontSize": "25sp",
     "playlistHeadHeight": 40,
     #Dailogs
