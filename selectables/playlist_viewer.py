@@ -21,7 +21,6 @@ class PlaylistViewHeader(GridLayout):
         s = self.line0.size
         line_width = (size[0] - self.label_width - 2*self.spacing[0]) / 2
 
-
         self.line0.marginD= int(size[1] / 2 - self.line_height / 2)
 
         self.line1.marginD= int(size[1] / 2 - self.line_height / 2)
@@ -121,7 +120,6 @@ class PlaylistFileContent(GridLayout):
             self.add_widget(self.content)
 
 
-
 class PlaylistFileView(StackLayout):
 
     def __init__(self, **kwargs):
@@ -161,21 +159,88 @@ class PlaylistFileView(StackLayout):
         self.add_widget(self.cont0)
 
 
-
-
 class PlaylistMenu(GridLayout):
+    _MODE_FILE = 0
+    _MODE_MEDIA = 1
+
+
+    def keyBack(self, args):
+        self.keyLeft(args)
+
+    def keyHome(self, args):
+        self.isEnabled  = False
+        self.playlistMediaFilesContent.deactivate(None)
+        self.playlistFilesContent.disable(None)
+
+    def keyEnter(self, args):
+        if self.isEnabled:
+            if self.mode == self._MODE_FILE:
+                self.playlistFilesContent.keyEnter(None)
+
+            elif self.mode == self._MODE_MEDIA:
+                self.playlistMediaFilesContent.keyEnter(None)
+
+
+    def keyUp(self, args):
+        if self.isEnabled:
+            if self.mode == self._MODE_FILE:
+                self.playlistFilesContent.keyUp(None)
+
+            elif self.mode == self._MODE_MEDIA:
+                self.playlistMediaFilesContent.keyUp(None)
+
+    def keyDown(self, args):
+        if self.isEnabled:
+            if self.mode == self._MODE_FILE:
+                self.playlistFilesContent.keyDown(None)
+
+            elif self.mode == self._MODE_MEDIA:
+                self.playlistMediaFilesContent.keyDown(None)
+
+    def keyLeft(self, args):
+        if self.isEnabled:
+            if self.mode == self._MODE_FILE:
+                return True
+
+            elif self.mode == self._MODE_MEDIA:
+                self.mode = self._MODE_FILE
+                self.playlistMediaFilesContent.deactivate(None)
+                self.playlistFilesContent.enable(False)
+
+
+        return False
+
+    def keyRight(self, args):
+        if self.isEnabled:
+            if self.mode == self._MODE_FILE:
+                self.mode = self._MODE_MEDIA
+                self.playlistFilesContent.disable(None)
+                self.playlistMediaFilesContent.activate(None)
+
+            elif self.mode == self._MODE_MEDIA:
+                self.mode = self._MODE_FILE
+
+        return False
+
+    def enable(self, args):
+        self.mode = self._MODE_FILE
+        self.isEnabled = True
+        self.playlistFilesContent.enable(None)
+
+    def disable(self,args):
+        self.playlistFilesContent.disable(None)
+
+        self.isEnabled = False
+
 
     def _updateJsonFiles(self, path):
-
-        #path = os.path.join(includes.config['playlist']['rootdir'], fileName)
-
         if os.path.isdir(path):
             return
         try:
             with open(path) as playFile:
                 self.playlistData = json.load(playFile)
         except:
-            logging.error("PlaylistMenu: updateJsonFiles: error in execution, most likely json file format error ....")
+            logging.error("PlaylistMenu: updateJsonFiles: error in execution, most likely json file format error. path=".format(path))
             return False
 
         if self._validateJson(path) < 0:
@@ -190,6 +255,7 @@ class PlaylistMenu(GridLayout):
             self.playlistMediaFilesContent.add(self.playlistData[item]['name'], False)
 
         return True
+
 
     def _validateJson(self, path):
         for i in range(len(self.playlistData)):
@@ -221,11 +287,32 @@ class PlaylistMenu(GridLayout):
         ret = self._updateJsonFiles(path)
 
         if ret:
-            self._validateJson(path)
+            if self._validateJson(path) == 0:
+                return ret
 
         return None
 
+
+    def _update_media_files(self, **kwargs):
+        widget = kwargs.pop('widget', None)
+        wId = kwargs.pop("wId", -1)
+
+        path = self.playlistFilesContent._getCurPath()
+        path = os.path.join(path, widget.text)
+
+        if os.path.isdir(path) or widget.text == "...":
+            self.playlistMediaFilesContent.clearWidgets()
+            return
+
+        ret = self._updateJsonFiles(path)
+
+        if ret:
+            self._validateJson(path)
+
+
     def __init__(self, **kwargs):
+        self.isEnabled = False
+
         self.line_color0 = kwargs.pop('line_color_playlist', (1,0,0,1))
         self.line_color1 = kwargs.pop('line_color_media', (1,0,0,1))
         self.highlight_color = kwargs.pop('highlight_color', (1,0,0,1))
@@ -249,12 +336,13 @@ class PlaylistMenu(GridLayout):
             plistHook=self._playlistFilesOnEnter,
             playerStartHandler=self.player_start_handler,
         )
+        self.playlistFilesContent.keyDownHook = self._update_media_files
+        self.playlistFilesContent.keyUpHook = self._update_media_files
 
         self.playlistMediaFilesContent = SelectListView(
             enaColor=self.highlight_color,
             bar_width=10,
         )
-
 
         self.playlistFiles = PlaylistFileView(
             line_color=self.line_color0,
@@ -277,256 +365,8 @@ class PlaylistMenu(GridLayout):
             content=self.playlistMediaFilesContent,
         )
 
-
-
         self.add_widget(self.playlistFiles)
         self.add_widget(self.mediaFiles)
-
-
-
-
-
-
-
-
-
-
-
-
-# class PlaylistViewer(StackLayout, Select):
-#     def size_change(self, widget, size):
-#         columnWidth0 = size[0] * 0.3
-#         columnWidth1 = size[0] - columnWidth0
-#
-#         headerHeight = includes.styles['playlistHeadHeight']
-#
-#         self.header0.size = (columnWidth0, headerHeight)
-#         self.header1.size = (columnWidth1, headerHeight)
-#
-#         self.fileList.size = (columnWidth0, size[1])
-#         self.files.size = (columnWidth1, size[1])
-#
-#
-#     def pos_change(self, widget, value):
-#         pass
-#
-#
-#     def keyDown(self, args):
-#         if self.fileList.widgets is None or len(self.fileList.widgets) <= 0:
-#             return True
-#
-#         if self.mode == self._fileList  and len(self.fileList.widgets) > 0:
-#             tmpId = self.fileList.wId + 1
-#
-#             if tmpId == len(self.fileList.widgets):
-#                 tmpId = tmpId - 1
-#
-#             self.updateJsonFiles(self.fileList.widgets[tmpId].text)
-#             ret = self.fileList.enable(None)
-#
-#             return ret
-#
-#         elif self.mode == self._jsonList:
-#             self.files.enable(None)
-#             return False
-#
-#         return False
-#
-#     def keyUp(self, args):#up
-#         if self.fileList.widgets is None or len(self.fileList.widgets) <= 0:
-#             return True
-#
-#         if self.mode == self._fileList and len(self.fileList.widgets) > 0:
-#             tmpId = self.fileList.wId - 1
-#             if tmpId < 0:
-#                 tmpId = 0
-#
-#
-#             self.updateJsonFiles(self.fileList.widgets[tmpId].text)
-#
-#             return self.fileList.disable(None)
-#
-#         elif self.mode == self._jsonList:
-#             self.files.disable({'disTop':False})
-#             return False
-#
-#         return False
-#
-#     def disableAll(self, args):
-#         for wid in self.fileList.widgets:
-#             wid.disable(None)
-#
-#
-#     def keyLeft(self, args):
-#         if self.mode == self._fileList:
-#
-#             return True
-#
-#         elif self.mode == self._jsonList:
-#             self.mode = self._fileList
-#
-#             for wid in self.files.widgets:
-#                 wid.disable({'inc':False})
-#
-#             self.files.wId = -1
-#
-#         return False
-#
-#     def keyRight(self, args):
-#         if args is not None:
-#             enableFilesView = args.pop('enableFilesView', True)
-#         else:
-#             enableFilesView = True
-#
-#         if self.mode == self._fileList and len(self.fileList.widgets) > 0:
-#             self.mode = self._jsonList
-#
-#             self.files.wId = -1
-#             if enableFilesView:
-#                 self.files.enable(None)
-#
-#         elif self.mode == self._jsonList:
-#             pass
-#
-#     def _validateJson(self, path):
-#         for i in range(len(self.pList)):
-#             if not str(i) in self.pList:
-#                 msg = "PlayList: playlist file ids not correct, stopped at id = {}\n".format(i)
-#                 msg = msg + "\tplist = {} / i = {} \n".format(self.pList, i)
-#                 msg = msg + "\tpath = {}".format(path)
-#                 logging.error(msg)
-#
-#                 return -1
-#
-#         i = 0
-#         for item in self.pList:
-#             if item != str(i):
-#                 msg = "PlayList: playlist ids not in sequential order !\n"
-#                 msg = msg + "\tpath = {}\n".format(path)
-#                 msg = msg + "\tlist = {}\n".format(self.pList)
-#                 msg = msg + "\t i = {}\n".format(i)
-#                 logging.error(msg)
-#                 return -2
-#             i = i + 1
-#
-#         return 0
-#
-#
-#     def updateJsonFiles(self, text):
-#         path = os.path.join(includes.config['playlist']['rootdir'], text)
-#
-#         if os.path.isdir(path):
-#             return
-#
-#         with open(path) as playFile:
-#             self.pList = json.load(playFile)
-#
-#         if self._validateJson(path) < 0:
-#             logging.error("MenuPlaylist: the Json file for selected playlist is not correct")
-#             return
-#
-#         self.files.layout.clear_widgets()
-#         self.files.wId = -1
-#         self.files.widgets = []
-#
-#         for item in self.pList:
-#             self.files.add(self.pList[item]['name'], False)
-#
-#
-#     def keyEnter(self, args):
-#         if args is not None:
-#             mode = args.pop('mode', "json")
-#         else:
-#             mode = "json"
-#
-#         self.ctrlQueue.put({
-#             'cmd':{'mode':mode, 'key':'enter'}})
-#
-#     _fileList = 0 #Not nice, really needed?
-#     _jsonList = 1 #Not nice, really needed?
-#
-#     def __init__(self, **kwargs):
-#         #pList = None #TODO Needed?
-#
-#
-#         self.selId = kwargs.pop('id', None)
-#         self.screenmanager = kwargs.pop('screenmanager', None)
-#
-#         super(MenuPlaylist, self).__init__(**kwargs)
-#
-#         self.cols = 2
-#         self.rows = 2
-#
-#         columnWidth0 = Window.width * 0.3
-#         columnWidth1 = Window.width-columnWidth0
-#         headerHeight = includes.styles['playlistHeadHeight']
-#         headerText0 = "[b]Playlists[/b]"
-#         headerText1 = "[b]Media Files[/b]"
-#
-#         self.header0 = SelectLabelBg(
-#             background_color=includes.styles['headerColor0'],
-#             text_size=(columnWidth0-20, headerHeight),
-#             text=headerText0,
-#             halign="center",
-#             valign="middle",
-#             size_hint_y=None,
-#             size_hint_x=None,
-#             height=headerHeight,
-#             width=columnWidth0,
-#             id="-1",
-#             markup=True
-#         )
-#         self.add_widget(self.header0)
-#
-#         self.header1 = SelectLabelBg(
-#             background_color=includes.styles['headerColor1'],
-#             text_size=(columnWidth0-20, headerHeight),
-#             text=headerText1,
-#             halign="center",
-#             valign="middle",
-#             size_hint_y=None,
-#             size_hint_x=None,
-#             height=headerHeight,
-#             width=columnWidth1,
-#             id="-1",
-#             markup=True
-#         )
-#
-#         self.add_widget(self.header1)
-#
-#         self.fileList = FileList(
-#             id=str(int(self.selId)+1),
-#             rootdir=includes.config['playlist']['rootdir'],
-#             enaColor=includes.styles['enaColor0'],
-#             bar_width=10,
-#             size_hint_x=None,
-#             width=columnWidth0,
-#             supportedTypes=includes.config['playlist']['types'],
-#             #screenmanager=self.screenmanager,
-#             fillerColor=includes.styles['headerColor0'],
-#             showDirs=False,
-#             selectFirst=False,
-#             showIcon=False,
-#         )
-#
-#         self.files = PlaylistJsonList(
-#             id=str(int(self.selId) + 5000),
-#             enaColor=includes.styles['enaColor1'],
-#             bar_width=10,
-#             size_hint_x=None,
-#             width=columnWidth1,
-#             fillerColor=includes.styles['headerColor1'],
-#             showIcon=False,
-#         )
-#
-#         self.add_widget(self.fileList)
-#         self.add_widget(self.files)
-#
-#         self.mode = self._fileList
-#
-#         self.bind(size=self.size_change)
-#         self.bind(size=self.pos_change)
-
 
 
 def test():
@@ -540,37 +380,66 @@ def test():
     class Main(App):
         def testFunc(self):
             import time
+            time.sleep(0.5)
+
+            self.menu.enable(None)
+            time.sleep(0.5)
+
+            self.menu.keyEnter(None)
+            time.sleep(0.5)
+
+            self.menu.keyDown(None)
+            time.sleep(0.5)
+
+            self.menu.keyRight(None)
+            time.sleep(0.5)
+
+
+            for i in range(9):
+                self.menu.keyDown(None)
+                time.sleep(0.5)
+
+            self.menu.keyLeft(None)
             time.sleep(2)
 
-            self.menu.playlistFilesContent.keyEnter(None)
-            self.menu.playlistFilesContent.keyDown(None)
-            self.menu.playlistFilesContent.keyEnter(None)
+
+            for i in range(10):
+                self.menu.keyLeft(None)
+                time.sleep(0.5)
+
+
+            for i in range(10):
+                self.menu.keyRight(None)
+                time.sleep(0.5)
+
+
+            self.menu.keyHome(None)
+            time.sleep(0.5)
+            #self.menu.playlistFilesContent.keyEnter(None)
 
         def build(self):
 
-            bar_width = 40
-            self.header = PlaylistViewHeader(
-                line_height=6,
-                spacing =  [0,0],
-                line_color=includes.colors['oldblue'],
-                font_size=includes.styles['fontSize'],
-                bar_width=bar_width,
-                height=50,
-                size_hint_y=None,
-            )
-            # self.header.size_hint_y = None
-            # self.header.height = 50
-
-            self.cont0 = PlaylistFileContent(
-                bar_width=bar_width,
-                line_color=includes.colors['oldblue'],
-            )
-
-            stack = StackLayout()
-            stack.add_widget(self.header)
-            stack.add_widget(self.cont0)
-
-            self.fview = PlaylistFileView()
+            # bar_width = 40
+            # self.header = PlaylistViewHeader(
+            #     line_height=6,
+            #     spacing =  [0,0],
+            #     line_color=includes.colors['oldblue'],
+            #     font_size=includes.styles['fontSize'],
+            #     bar_width=bar_width,
+            #     height=50,
+            #     size_hint_y=None,
+            # )
+            #
+            # self.cont0 = PlaylistFileContent(
+            #     bar_width=bar_width,
+            #     line_color=includes.colors['oldblue'],
+            # )
+            #
+            # stack = StackLayout()
+            # stack.add_widget(self.header)
+            # stack.add_widget(self.cont0)
+            #
+            # self.fview = PlaylistFileView()
 
             def dummyPlay(self):
                 logging.error("Dummy play has been called...")
@@ -596,9 +465,6 @@ def test():
 
 
             return self.menu
-            #return self.fview
-            # return stack
-            #return self.cont0
-            # return self.header
+
 
     Main().run()

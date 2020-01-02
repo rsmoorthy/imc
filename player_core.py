@@ -149,6 +149,7 @@ class PlayerCore():
                     if not play:
                         playlist = cmd['playlist']
                         check = checkPlaylist(playlist)
+                        logging.error("THomas:: check playlist = {}  / {}".format(check, playlist) )
                         if check[1] == 0:
                             play = True
                         else:

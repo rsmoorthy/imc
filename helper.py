@@ -50,6 +50,13 @@ def createPlayListEntry(path, nodeId, start):
 #Sanity check for playlist object to ensure player core can process them
 #
 def checkPlaylist(playlist):
+    if type(playlist) != dict:
+        return ("PlayistCheck: playlist is not a dict",-4)
+
+    for item in playlist:
+        if len(playlist[item]) < 4:
+            return ("PlayistCheck: playlist is empty",-5)
+
     try:
         #Check if its consecutive numbers, if key does not exist exception !
         for i in range(len(playlist)):
@@ -87,7 +94,7 @@ def clipInt(value, min, max):
 
     return value
 
-#Rotate integer when overflow 
+#Rotate integer when overflow
 #
 def rotateInt(value, min, max):
     if value > max:

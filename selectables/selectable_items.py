@@ -17,8 +17,10 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.graphics import Rectangle, Color, Line, Ellipse
 from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import Screen, ScreenManager
+from selectables.images import ImageBg
 
 import includes
+from helper import rotateInt
 
 #
 # Is this class really going to help us?
@@ -88,7 +90,10 @@ class SelectLabel(Label, Select):
         return
 
 
-class SelectButton(Button, Select):
+
+
+
+class SelectButtonOld(Button, Select):
     btnType = None
 
     def on_press(self):
@@ -325,40 +330,6 @@ class SelectLabelBg(SelectLabel):
         self.bind(background_color=self.updateBg)
         self.bind(enaColor=self.updateBg)
 
-class ImageBg(Widget):
-    def _posChange(self, widget, value):
-        posX = value[0] + self.marginL
-        posY = value[1] + self.marginD
-        self.img.pos = (posX, posY)
-
-    def _sizeChange(self, widget, value):
-        self.width = self.marginL + value[0] + self.marginR
-        self.height = self.marginL + value[1] + self.marginU
-
-        posX = self.pos[0] + self.marginL
-        posY = self.pos[1] + self.marginD
-
-        self.img.pos = (posX, posY)
-
-    def __init__(self, **kwargs):
-        self.imgSrc = kwargs.pop('source', None)
-        self.background_color = kwargs.pop('background_color', includes.styles['defaultBg'])
-        self.marginD, self.marginU, self.marginL, self.marginR = kwargs.pop('margin', (0,0,0,0))
-
-        self.width = self.marginL + self.width + self.marginR
-        self.height = self.marginL + self.height + self.marginU
-
-        posX = self.pos[0] + self.marginL
-        posY = self.pos[1] + self.marginD
-
-        super(ImageBg, self).__init__(**kwargs)
-
-        with self.canvas:
-            Color(1)
-            self.img = Rectangle(source=self.imgSrc, size=self.size, pos=(posX, posY))
-
-        self.bind(size=self._sizeChange)
-        self.bind(pos=self._posChange)
 
 
 class SelectListViewItem(StackLayout, Select):
@@ -733,7 +704,7 @@ class SelectSpinner(GridLayout, Select):
 
     def left(self, args):
         if self.isActive:
-            self.wId = includes.rotateInt(self.wId - 1, 0, len(self.widgets) - 1)
+            self.wId = rotateInt(self.wId - 1, 0, len(self.widgets) - 1)
             self.manager.switch_to(self.widgets[self.wId], direction="left")
             return False
 
@@ -741,7 +712,7 @@ class SelectSpinner(GridLayout, Select):
 
     def right(self, args):
         if self.isActive:
-            self.wId = includes.rotateInt(self.wId + 1, 0, len(self.widgets) - 1)
+            self.wId = rotateInt(self.wId + 1, 0, len(self.widgets) - 1)
             self.manager.switch_to(self.widgets[self.wId], direction="right")
             return False
 
@@ -908,6 +879,45 @@ class SelectToggleButton(ToggleButton):
                 self.btnType = "text"
 
             super(SelectToggleButton, self).__init__(**kwargs)
+
+
+
+def testImageBg():
+    from kivy.app import App
+    import threading
+    import time
+    from kivy.utils import get_color_from_hex as hexColor
+    class Test(App):
+        def _worker(self):
+            for i in range(10):
+                logging.error("worker thread")
+                time.sleep(1)
+                self.image.background_color = hexColor('#0f85a5')
+                time.sleep(1)
+                self.image.background_color = hexColor('#2c2c2c')
+
+        def build(self):
+            global test
+
+            self.thread = threading.Thread(target=self._worker)
+            self.thread.setDaemon(True)
+            self.thread.start()
+
+
+
+
+            self.image = ImageBg(
+                source="/tmp/a.png",
+                background_color=hexColor('#0f85a5'),
+                size_hint_y=None,
+                height=60,
+                size_hint_x=None,
+                width=160
+            )
+
+            return self.image
+
+    Test().run()
 
 
 if __name__ == "__main__":

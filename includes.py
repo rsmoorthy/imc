@@ -54,6 +54,7 @@ colors = {
     #These are the main color used for the GUI
     'imcBlue': hexColor('#063541'), #used for lines, deviders etc
     'imcLigthGray': hexColor('#3d3d3d'), #used for lined, divider etc
+    'imcDarkGray': hexColor('#2c2c2c'), #used for lined, divider etc
     #error message colors
     'errMsgHead' : hexColor('#6c5d53'),
     'errMsgText' : hexColor('#ffffff'),
@@ -96,6 +97,7 @@ styles = {
     'enaColor1': colors['orange'],
     'warning': colors['lightred'],
     'defaultFiller': colors['lightblue'],
+    'menuBarColor': colors['imcDarkGray'],
     #'itemColor0': colors['darkgray'],
     'itemColor0': colors['black'],
     'itemColor1': colors['black'],
@@ -190,6 +192,8 @@ def writeConfig():
 
 #Global instance of screen saver
 screenSaver = None #will be initialized by main-menu
+changeFooterColor = None
+playerCore = None
 
 #database, bsically a json file which we read and write
 dbPath = os.path.join(syspath, "resources", "database.json") #TODO: must be in the /opt/ somewhere as it is non volatile

@@ -39,12 +39,15 @@ class FileList(SelectListView):
 
         return False
 
-    def enable(self):
-        self.wId = 0
-        self.widgets[self.wId].enable()
+    def enable(self, args):
+        if args is None:
+            self.wId = 0
 
-    def disable(self):
-        self.widgets[self.wId].disable()
+        self.isEnabled = True
+        self.widgets[self.wId].enable(None)
+
+    def disable(self, args):
+        self.widgets[self.wId].disable(None)
 
     def keyEnter(self, args):
         #Get the path of currently selected file
@@ -83,14 +86,14 @@ class FileList(SelectListView):
                         )
 
                         i = i + 1
+                else:
+                    playlist.update(
+                        createPlayListEntry(path, 0, 0)
+                    )
 
             elif self.type == "playlist":
                 if self.plistHook is not None:
                     playlist = self.plistHook(path)
-            else:
-                playlist.update(
-                    createPlayListEntry(path, 0, 0)
-                )
 
             # Start playback
             #
@@ -164,7 +167,9 @@ class FileList(SelectListView):
         if len(self.widgets) > 0:
             self.wId = 0
             self.scroll_to(self.widgets[self.wId], animate=False)
-            self.widgets[self.wId].enable(None) #TODO: is this needed?
+
+            if self.isEnabled:
+                self.widgets[self.wId].enable(None) #TODO: is this needed?
 
     def _getCurPath(self):
         '''
@@ -184,6 +189,7 @@ class FileList(SelectListView):
         '''Initialize the needed variables and pop all arguments needed from kwargs'''
         self.rootdir = ""
         self.dirTree = []
+        self.isEnabled = False
 
         self.rootdir = kwargs.pop('rootdir', None)
 

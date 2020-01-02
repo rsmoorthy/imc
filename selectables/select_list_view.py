@@ -1,6 +1,7 @@
 import logging
 
-from selectables.selectable_items import Select, SelectLabelBg, ImageBg
+from selectables.selectable_items import Select, SelectLabelBg
+from selectables.images import ImageBg
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty
 from kivy.uix.gridlayout import GridLayout
@@ -93,13 +94,22 @@ class SelectListViewItem(StackLayout, Select):
 class SelectListView(Select, ScrollView):
     enaColor = ObjectProperty(includes.styles['defaultEnaColor'])
 
-    def keyLeft(self, args):
-        self.widgets[self.wId].disable(None)
-        self.wId = 0
+    def clearWidgets(self):
+        self.layout.clear_widgets()
+
+    def keyDownHook(self, **kwargs):
+        pass
+
+    def keyUpHook(self, **kwargs):
+        pass
 
     def activate(self, args):
         self.wId = 0
         self.widgets[0].enable(None)
+
+    def deactivate(self, args):
+        for item in self.widgets:
+            item.disable(None)
 
     def keyDown(self, args):
         if isinstance(args, dict):
@@ -122,6 +132,8 @@ class SelectListView(Select, ScrollView):
             self.wId = 0
             self.widgets[self.wId].enable(None)
             self.scroll_to(self.widgets[self.wId])
+
+        self.keyDownHook(wId=self.wId, widget=self.widgets[self.wId])
 
         return False
 
@@ -150,10 +162,11 @@ class SelectListView(Select, ScrollView):
             self.scroll_to(self.widgets[self.wId])
             return True
 
+        self.keyUpHook(wId=self.wId, widget=self.widgets[self.wId])
         return False
 
     def add(self, text, isDir):
-        logging.error("Thomas: add elements....")
+
         '''Add a new entry to the list view'''
         if self.showIcon:
             imgWidth = includes.styles['selectItemHeight']
