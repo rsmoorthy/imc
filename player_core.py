@@ -4,6 +4,8 @@ import mpv_player_v0
 import time
 import threading
 import logging
+
+
 logging.basicConfig(level=logging.DEBUG)
 
 from queue import Queue
@@ -94,6 +96,10 @@ class PlayerCore():
     @synchronized(playerSync)
     def keyNext(self, args):
         self._sendCommand({'cmd':'next'})
+
+    @synchronized(playerSync)
+    def togglePause(self, args):
+        self.player.togglePause()
 
     #@synchronized(playerSync)
     def keyPrevious(self, args):

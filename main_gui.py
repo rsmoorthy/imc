@@ -1,48 +1,37 @@
 '''This is the main loop of the IshaPi player application'''
 import logging
+import os
+import threading
+import time
+import  http.server
+
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.logger import Logger
-
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from selectables.menu_video_audio import MenuVideoAudio
-
-import os
-import  http.server
-import threading
-import subprocess
-import requests
-import json
-from functools import wraps
-import time
-
 from kivy.uix.stacklayout import StackLayout
+from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
+
 from selectables.imc_tabview import ImcTabview
 from selectables.menu_shutdown import MenuShutdown
 from selectables.file_list import FileList
-from player_core import PlayerCore
 from selectables.playlist_viewer import PlaylistMenu
+from selectables.menu_video_audio import MenuVideoAudio
+from selectables.menu_settings import MenuSettings
+from selectables.menu_system import MenuSystem
+from selectables.selectable_items import SelectLabelBg
 
 import control_tree
 import includes
 import audio_fader
 
+from player_core import PlayerCore
 from key_handler import KeyHandler
 from control_tree import selectId as selectId
 from screensaver import ScreenSaver
-from ipc import Ipc
-from selectables.menu_settings import MenuSettings
-from selectables.menu_system import MenuSystem
-from selectables.selectable_items import SelectableTabbedPanelHeader, SelectLabelBg
-
-# from menu_video import FileList
-# from menu_osd import MenuOSD, OsdController
-# from menu_playlist import MenuPlaylist
-# from key_handler import KeyHandler
-# from dialog import DialogHandler
-# from menu_shutdown import MenuShutdown
-# import server
+from json_handler import  _addJsonSystemcall
+from json_handler import  _systemCallbacks as deleteme
+import server
 
 Logger.setLevel(logging.DEBUG) #TODO: for debuging Pi App should be able to change this
 
@@ -144,12 +133,6 @@ class MainMenu(ImcTabview):
             if 'args' in cmd:
                 args = cmd['args']
 
-            #TODO: is this still needed?
-            # #add user defined arguments of selectable widget to args passed to callback
-            # if self.selectableWidgets[tmpId].user is not None:
-            #     for item in self.selectableWidgets[tmpId].user:
-            #         args[item] = self.selectableWidgets[tmpId].user[item]
-
             #Execute build in fucntions/object functions
             ret = getattr(self.selectableWidgets[tmpId], func)(args)
 
@@ -225,6 +208,24 @@ class MainMenu(ImcTabview):
         self.keyDownSemaphore.release()
         return -1
 
+    # Osd related things
+    #
+    @_addJsonSystemcall("_cmdMuteToggle")
+    def _cmdMuteToggle(self, args):
+        self.selectableWidgets[selectId['osd']].enable(None)
+        self.ipc.sendCmd({'cmd':{'func':'muteToggle'}}, includes.config['ipcOsdPort'])
+
+    def _server(self):
+        ip = includes.config['httpServerIp']['ip']
+        port = includes.config['httpServerIp']['port']
+        self.httpd = http.server.HTTPServer((ip, int(port)), server.WebServer)
+
+        try:
+            self.httpd.serve_forever()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            self.httpd.server_close()
 
     def __init__(self, **kwargs):
         self.selectableWidgets = {}
@@ -248,7 +249,6 @@ class MainMenu(ImcTabview):
         includes.playerCore.activateColorBar = includes.changeFooterColor
         includes.playerCore.screenSaverRun = self.screenSaver.start
 
-
         #Shutdown screen setup
         self.menuShutdown = MenuShutdown(screenManager=self.root)
         self.shutdownScreen = Screen(name="shutdown")
@@ -259,7 +259,6 @@ class MainMenu(ImcTabview):
         #setup key handler
         self.keyHandler = KeyHandler()
         self.keyHandler.onPress = self._keyDown
-
 
         #System Menu setup
         self.menuSystem = MenuSystem(mainMenu=self)
@@ -331,6 +330,10 @@ class MainMenu(ImcTabview):
         self.selectableWidgets[selectId['mFiles']] = self.menuMusic
         self.selectableWidgets[selectId['pFiles']] = self.menuPlaylist
 
+        #Setup the server
+        self.serverThread = threading.Thread(target=self._server)
+        self.serverThread.setDaemon(True)
+        self.serverThread.start()
 
         #prepare system for execution....
         self.screenSaver.enable()
@@ -340,6 +343,8 @@ class MainMenu(ImcTabview):
             self.selectableWidgets[self.curId].enable(None)
         except Exception as allExceptions:
             logging.error("Menu: cannot find default widget...")
+
+        logging.error(f"Thomas: --------- callback ??? {deleteme}")
 
 # Create the Kivy application
 #

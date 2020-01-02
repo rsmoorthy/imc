@@ -432,28 +432,6 @@ def test():
 
         def build(self):
 
-            # bar_width = 40
-            # self.header = PlaylistViewHeader(
-            #     line_height=6,
-            #     spacing =  [0,0],
-            #     line_color=includes.colors['oldblue'],
-            #     font_size=includes.styles['fontSize'],
-            #     bar_width=bar_width,
-            #     height=50,
-            #     size_hint_y=None,
-            # )
-            #
-            # self.cont0 = PlaylistFileContent(
-            #     bar_width=bar_width,
-            #     line_color=includes.colors['oldblue'],
-            # )
-            #
-            # stack = StackLayout()
-            # stack.add_widget(self.header)
-            # stack.add_widget(self.cont0)
-            #
-            # self.fview = PlaylistFileView()
-
             def dummyPlay(self):
                 logging.error("Dummy play has been called...")
 
