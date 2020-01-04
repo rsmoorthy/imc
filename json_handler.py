@@ -16,14 +16,12 @@ _systemCallbacks = {}
 # Decorators
 def _addHandler(url):
     def inner_decorator(f):
-        print(url)
         _jsonHandler[url] = f
         return f
     return inner_decorator
 
 def _addJsonSystemcall(url):
     def inner_decorator(f):
-        print(url)
         _systemCallbacks[url] = f
         return f
     return inner_decorator
@@ -156,12 +154,14 @@ def _applicationSetVolume(jsonId, params):
 def _applicationGetProperties(jsonId, params):
     properties = params['properties']
     resp = {}
-    resp['params'] = {}
+    resp['result'] = {}
+
+    volume = _systemCallbacks['getVolume']()
     for item in properties:
         if item == "volume":
-            resp['params']['volume'] = 100 #TODO: need to implment get volume
+            resp['result']['volume'] = volume
         elif item == "muted":
-            resp['params']['muted'] = False
+            resp['result']['muted'] = (volume == 0)
 
     resp['id'] = jsonId
     resp['jsonrpc'] = "2.0"
@@ -188,7 +188,7 @@ def _playerGetProperties(jsonId, params):
         hour = int(tmp / 3600)
         min = int((tmp - (hour*3600)) / 60)
         sec = int((tmp - hour*3600 - min * 60))
-        return (hour, sec, min, 0)
+        return (hour, min, sec, 0)
 
     properties = params['properties']
     resp = {}
@@ -295,6 +295,28 @@ def _playerPlayPause(jsonId, params):
 
     return resp
 
+@_addHandler('Player.Play')
+def _playerPlayPause(jsonId, params):
+    includes.playerCore.play(None)
+
+    resp = {}
+    resp['id'] = jsonId
+    resp['jsonrpc'] = "2.0"
+    resp['result'] = {'speed':0}
+
+    return resp
+
+@_addHandler('Player.Pause')
+def _playerPlayPause(jsonId, params):
+    includes.playerCore.pause(None)
+
+    resp = {}
+    resp['id'] = jsonId
+    resp['jsonrpc'] = "2.0"
+    resp['result'] = {'speed':0}
+
+    return resp
+
 
 @_addHandler('Player.Stop')
 def _playerStop(jsonId, params):
@@ -304,6 +326,42 @@ def _playerStop(jsonId, params):
     resp['id'] = jsonId
     resp['jsonrpc'] = "2.0"
     resp['result'] = "OK"
+    return resp
+
+
+@_addHandler("Player.IsPlaying")
+def _playerIsPlaying(jsonId, params):
+    resp = {}
+    resp['id'] = jsonId
+    resp['jsonrpc'] = "2.0"
+    resp['result'] = str(includes.playerCore.isPlaying())
+    return resp
+
+@_addHandler("Player.IsPaused")
+def _playerIsPlaying(jsonId, params):
+    resp = {}
+    resp['id'] = jsonId
+    resp['jsonrpc'] = "2.0"
+    resp['result'] = str(includes.playerCore.isPaused())
+    return resp
+
+@_addHandler("Player.IsPaused")
+def _playerIsPlaying(jsonId, params):
+    resp = {}
+    resp['id'] = jsonId
+    resp['jsonrpc'] = "2.0"
+    resp['result'] = str(includes.playerCore.isPaused())
+    return resp
+
+@_addHandler("Player.Seek")
+@_jsonHandlerCheck
+def _playerSeek(jsonId, params):
+    tstart = int(params['start'])
+
+    resp = {}
+    resp['id'] = jsonId
+    resp['jsonrpc'] = "2.0"
+    resp['result'] = str(includes.playerCore.seek(tstart))
     return resp
 
 

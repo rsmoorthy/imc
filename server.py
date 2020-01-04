@@ -63,7 +63,6 @@ class WebServer(http.server.BaseHTTPRequestHandler, object):
             method = "None" # make sure no execution happens in the next steps
 
         if method in jsonHandler:
-            logging.error(f"Thomas: {jsonHandler[method]}")
             resp = jsonHandler[method](jsonId, params)
 
         elif "Input." in method:
@@ -108,6 +107,9 @@ class WebServer(http.server.BaseHTTPRequestHandler, object):
         self.end_headers()
 
         self.wfile.write(json.dumps(ret).encode())
+
+    def log_message(self, format, *args):
+        return
 
     # def __init__(self, *args, **kwargs):
     #     super(WebServer, self).__init__(*args, **kwargs)

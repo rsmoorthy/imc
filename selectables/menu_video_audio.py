@@ -32,8 +32,7 @@ class MenuVideoAudio(PlaylistFileView):
         tmp = int((self.height-self.header.height) / styles['selectItemHeight']) + 1
         tmp = tmp * styles['selectItemHeight']
         self.cont0.height = tmp
-    #    logging.error(f"Thomas: self.heigt = {self.height} |  header height = {self.header.height} | element height = {styles['selectItemHeight']}")
-
+    
     def __init__(self, **kwargs):
         self.rootdir = kwargs.pop("rootdir", "/tmp")
         self.enaColor = kwargs.pop('enaColor', (1,0,0,1))

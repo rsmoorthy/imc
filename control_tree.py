@@ -46,6 +46,8 @@ selectId = {
     'root': 300,
 
     'powermenu':400,
+    'playerCore':500,
+    'audioCtrl':600
 
 }
 
@@ -352,6 +354,28 @@ CONTROL_TREE = {
         "down": [{'func':'enable', 'id':selectId['powermenu']}],
         "up":[{'func':'disable', 'id':selectId['powermenu']}],
         "enter":[{'func':'enter', 'id':selectId['powermenu']}],
+    },
+    #
+    # OSD controller, passing key presses to OSD application
+    #
+    selectId['osd']:{
+        "left": [{'func':'left', 'id':selectId['osd']}],
+        "right":[{'func':'right', 'id':selectId['osd']}],
+        "+":[{'func':'volumeUp', 'id':selectId['osd']}],
+        "-":[{'func':'volumeDown', 'id':selectId['osd']}],
+        "m":[{'func':'mute', 'id':selectId['osd']}],
+        "home":[{'func':'disable', 'id':selectId['osd']}],
+        "enter":[{'func':'enter', 'id':selectId['osd']}],
+        "esc":[{'func':'disable', 'id':selectId['osd']}],
+        "back":[{'func':'disable', 'id':selectId['osd']}],
+        "up":[{'func':'up', 'id':selectId['osd']}],
+        "down":[{'func':'down', 'id':selectId['osd']}],
+    },
+    #
+    # Player Core instance
+    #
+    selectId['playerCore']:{
+        "enter": [{'func':'keyEnter', 'id':selectId['playerCore']}],
     }
 }
 

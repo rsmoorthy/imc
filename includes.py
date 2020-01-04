@@ -112,12 +112,13 @@ defaultConf = {
         "autoplay": "false"
     },
     "settings": {
-        "osdTime": 10,
+        "osdTime": 5,
         "runtimeInterval": 1,
         "screensaverTime": 5,
         "hdmiBoost": 4,
         "audioSource":0,
-        "hdmiResolution":0
+        "hdmiResolution":0,
+        "volIncVal":5,
     },
     "httpServerIp":{
         "ip":"127.0.0.1",

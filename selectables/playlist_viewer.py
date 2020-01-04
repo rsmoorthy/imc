@@ -16,8 +16,7 @@ import includes
 
 class PlaylistViewHeader(GridLayout):
     def _changeSize(self, widget, size):
-        logging.error("size changed.... {}".format(size))
-
+        
         s = self.line0.size
         line_width = (size[0] - self.label_width - 2*self.spacing[0]) / 2
 
@@ -315,7 +314,6 @@ class PlaylistMenu(GridLayout):
 
         path = self.playlistFilesContent._getCurPath()
         path = os.path.join(path, widget.text)
-        logging.error(f"Thomas: media update....{path}")
 
         if os.path.isdir(path) or widget.text == "...":
             self.playlistMediaFilesContent.clearWidgets()

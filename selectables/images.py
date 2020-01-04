@@ -2,8 +2,11 @@ from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
 from kivy.graphics import Rectangle, Color
 
+import logging
+
 class ImageBg(Widget):
     background_color = ObjectProperty()
+    imgSrc = ObjectProperty()
 
     def _posChange(self, widget, value):
         posX = value[0] + self.marginL
@@ -34,6 +37,18 @@ class ImageBg(Widget):
             Color()
             self.img = Rectangle(source=self.imgSrc, size=self.size, pos=(posX, posY))
 
+    def _srcChange(self, widget, value):
+        posX = self.pos[0] + self.marginL
+        posY = self.pos[1] + self.marginD
+
+        self.canvas.clear()
+
+        with self.canvas:
+            Color(*self.background_color)
+            self.rect = Rectangle(size=self.size, pos=(posX, posY))
+
+            Color()
+            self.img = Rectangle(source=self.imgSrc, size=self.size, pos=(posX, posY))
 
 
     def __init__(self, **kwargs):
@@ -59,3 +74,4 @@ class ImageBg(Widget):
         self.bind(size=self._sizeChange)
         self.bind(pos=self._posChange)
         self.bind(background_color=self._bgChange)
+        self.bind(imgSrc=self._srcChange)

@@ -3,7 +3,7 @@ import logging
 import os
 import threading
 import time
-import  http.server
+import http.server
 
 from kivy.app import App
 from kivy.core.window import Window
@@ -20,20 +20,22 @@ from selectables.menu_video_audio import MenuVideoAudio
 from selectables.menu_settings import MenuSettings
 from selectables.menu_system import MenuSystem
 from selectables.selectable_items import SelectLabelBg
+from audio_controler import AudioController
 
 import control_tree
 import includes
-import audio_fader
+import server
 
+from menu_osd import OsdController
 from player_core import PlayerCore
 from key_handler import KeyHandler
 from control_tree import selectId as selectId
 from screensaver import ScreenSaver
 from json_handler import  _addJsonSystemcall
-from json_handler import  _systemCallbacks as deleteme
-import server
+from json_handler import  _systemCallbacks
 
-Logger.setLevel(logging.DEBUG) #TODO: for debuging Pi App should be able to change this
+
+#Logger.setLevel(logging.DEBUG) #TODO: for debuging Pi App should be able to change this
 
 # Create the differten tab view objects like power off, menu  and screen saver screens
 #
@@ -46,7 +48,7 @@ class IshaGui(StackLayout):
 
     def changeFooterColor(self, mode):
         if mode == 0:
-            self.footer.background_color = includes.styles['defaultBg']
+            self.footer.enaColor = includes.styles['defaultBg']
         elif mode == 1:
             self.footer.background_color = includes.styles['enaColor0']
 
@@ -64,9 +66,9 @@ class IshaGui(StackLayout):
             height=includes.styles['pListIndiactorHeight']
         )
 
+
         self.screens.size_hint_y = None
         self.screens.height = Window.height - self.footer.height
-
 
         self.add_widget(self.screens)
         self.add_widget(self.footer)
@@ -108,7 +110,6 @@ class MainMenu(ImcTabview):
 
         for cmd in cmdList:
             #Check if cmd is also a list, if so recursively we will execute
-            #logging.debug("_keyHandler: going to execute command = {}".format(cmd))
             if isinstance(cmd, list):
                 self._keyHandler(cmd)
                 continue
@@ -152,26 +153,24 @@ class MainMenu(ImcTabview):
         """Key handler for global keys like volume up / volume down /mute etc."""
 
         if keycode[1] == "pgdown":
-            if self.playerControl.isPlaying():
-                vol = audio_fader.getVolume()
-                audio_fader.audioFadeout(10, 12, 15, 60, 40, 0.1)
+            if includes.playerCore.isPlaying():
+                vol = self.audioController.getVolume()
+                self.audioController.audioFadeout(10, 12, 15, 60, 40, 0.1)
                 self.playerControl.stop(None)
-                audio_fader.setVolume(vol)
+                self.audioController.setVolume(vol)
 
             return
 
         if keycode[1] == "+":
-            data = {}
-            data['cmd'] = {'func':'volumeUp'}
+            self.audioController.volumeUp()
             return
 
         if keycode[1] == "-":
-            data = {}
-            data['cmd'] = {'func':'volumeDown'}
+            self.audioController.volumeDown()
             return
 
         if keycode[1] == "m":
-            data = {"cmd": {"func": "muteToggle"}}
+            self.audioController.mute()
             return
 
         if keycode[1] == "power":
@@ -190,12 +189,13 @@ class MainMenu(ImcTabview):
         msg = msg + "on element with curId = {}".format(self.curId)
         logging.debug(msg)
 
-        if self.screenSaver.active and self.screenSaver.ena:
-            self.screenSaver.resetTime()
-            self.keyDownSemaphore.release()
-            return 0
+        if self.curId != selectId['osd']:
+            if self.screenSaver.active and self.screenSaver.ena :
+                self.screenSaver.resetTime()
+                self.keyDownSemaphore.release()
+                return 0
 
-        self.screenSaver.resetTime()
+            self.screenSaver.resetTime()
 
         self._globalKeyHandler(keycode)
 
@@ -210,10 +210,20 @@ class MainMenu(ImcTabview):
 
     # Osd related things
     #
+    def osdDisable(self, args):
+        '''Switch control back to last element after OSD was displayed'''
+        self.curId = self.lastId
+
+    def osdEnable(self, mode):
+        '''Before switching to the OSD remember the current selected element'''
+        self.lastId = self.curId
+        self.curId = selectId[mode]
+
     @_addJsonSystemcall("_cmdMuteToggle")
     def _cmdMuteToggle(self, args):
         self.selectableWidgets[selectId['osd']].enable(None)
         self.ipc.sendCmd({'cmd':{'func':'muteToggle'}}, includes.config['ipcOsdPort'])
+
 
     def _server(self):
         ip = includes.config['httpServerIp']['ip']
@@ -248,6 +258,10 @@ class MainMenu(ImcTabview):
         )
         includes.playerCore.activateColorBar = includes.changeFooterColor
         includes.playerCore.screenSaverRun = self.screenSaver.start
+        includes.playerCore.osdEnable = self.osdEnable
+        includes.playerCore.osdDisable = self.osdDisable
+        self.selectableWidgets[selectId['playerCore']] = includes.playerCore
+
 
         #Shutdown screen setup
         self.menuShutdown = MenuShutdown(screenManager=self.root)
@@ -318,6 +332,18 @@ class MainMenu(ImcTabview):
 
         self.update(None)
 
+        #audio controller
+        self.audioController = AudioController(
+            includes.config['settings']['volIncVal'],
+            self.volumeIndicator,
+            False
+        )
+
+        vol = self.audioController.getVolume()
+
+        _systemCallbacks['getVolume'] = self.audioController._getVolume
+        self.volumeIndicator.value = vol
+
         #Setup the selectable widget object for key handling
         self.selectableWidgets[selectId['settings']] = self.getMenuBtn(selectId['settings'])
         self.selectableWidgets[selectId['videos']] = self.getMenuBtn(selectId['videos'])
@@ -329,6 +355,8 @@ class MainMenu(ImcTabview):
         self.selectableWidgets[selectId['vFiles']] = self.menuVideo
         self.selectableWidgets[selectId['mFiles']] = self.menuMusic
         self.selectableWidgets[selectId['pFiles']] = self.menuPlaylist
+        self.selectableWidgets[selectId['osd']] = OsdController()
+        self.selectableWidgets[selectId['audioCtrl']] = self.audioController
 
         #Setup the server
         self.serverThread = threading.Thread(target=self._server)
@@ -338,13 +366,12 @@ class MainMenu(ImcTabview):
         #prepare system for execution....
         self.screenSaver.enable()
 
+
         #Try to enable the start widget
         try:
             self.selectableWidgets[self.curId].enable(None)
         except Exception as allExceptions:
             logging.error("Menu: cannot find default widget...")
-
-        logging.error(f"Thomas: --------- callback ??? {deleteme}")
 
 # Create the Kivy application
 #

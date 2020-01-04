@@ -18,3 +18,11 @@ if sys.argv[1] == "imagebg":
 if sys.argv[1] == "selectviewItem":
     from selectables.select_list_view import TestSelectListviewItem
     TestSelectListviewItem()
+
+if sys.argv[1] == "osdctrl":
+    from menu_osd import TestOsdRemoteIf
+    TestOsdRemoteIf()
+
+if sys.argv[1] == "volumemain":
+    from selectables.volume_widget import TestVolumeIndicatorMain as test
+    test()

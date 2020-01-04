@@ -47,11 +47,8 @@ class Player():
     # Public functions of the player, each player class should have them
     #
     def stop(self):
-        self._execute({'command': ["quit"]})
+        self.killPlayer()
 
-        #make sure function blocks antil process is killed !
-        while self._isPlaying:
-            time.sleep(0.25)
 
     def pause(self):
         self._execute({'command': ["set_property", "pause", True]})
@@ -59,8 +56,8 @@ class Player():
     def play(self):
         self._execute({'command': ["set_property", "pause", False]})
 
-    def seek(self, args):
-        self._execute({'command': ["seek", int(args['value']), "absolute"]})
+    def seek(self, time):
+        self._execute({'command': ["seek", str(time), "absolute"]})
 
     def togglePause(self):
         val = self.isPaused()
@@ -85,9 +82,9 @@ class Player():
             return 0
 
         try:
-            tmp = json.loads(ret[0])
-            if 'data' in tmp:
-                return int(tmp['data'])
+            #tmp = json.loads(ret[0])
+            if 'data' in ret:
+                return int(ret['data'])
 
         except json.decoder.JSONDecodeError as e:
             logging.error("Player: {}".format(e))
@@ -100,9 +97,8 @@ class Player():
             return 0
 
         try:
-            tmp = json.loads(ret[0])
-            if 'data' in tmp:
-                return int(tmp['data'])
+            if 'data' in ret:
+                return int(ret['data'])
 
         except json.decoder.JSONDecodeError as e:
             logging.error("Player: {}".format(e))
@@ -119,10 +115,8 @@ class Player():
         if ret is None:
             return False
 
-        tmp = json.loads(ret[0])
-
-        if 'data' in tmp:
-            return tmp['data']
+        if 'data' in ret:
+            return int(ret['data'])
         else:
             return None
 
@@ -157,27 +151,30 @@ class Player():
             if self.socket:
                 self.socket.send(data)
                 buf = self.socket.recv(1024)
+
                 if "error" not in str(buf):#we got event see read again... retry
                      buf = self.socket.recv(1024)
+
+                result = json.loads(buf.decode("utf-8"))
+
+                if not 'error' in result:
+                    self.semaExec.release()
+                    return None
+
+                status = result['error']
+                if status == 'success':
+                    self.semaExec.release()
+                    return result
+
             else:
                 self.semaExec.release()
                 return None
         except:
+            logging.error("MpvPlayerV0: _execute: exception in socket communication")
             self.semaExec.release()
             return None
 
-        tmp = buf.decode('utf-8').split('\n')
 
-        for item in tmp:
-            result = json.loads(item)
-            if not 'error' in result:
-                self.semaExec.release()
-                return None
-
-            status = result['error']
-            if status == 'success':
-                self.semaExec.release()
-                return tmp
 
         logging.error("Player: error value returned from player...")
         self.semaExec.release()
@@ -203,7 +200,7 @@ class Player():
             return
 
         while self.process.poll() == None:
-            time.sleep(0.25)
+            time.sleep(1)
 
 
         #-------------- End of playback ------------

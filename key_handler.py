@@ -45,9 +45,9 @@ class KeyHandler():
 		self.scancodes[106] = "right"
 		self.scancodes[108] = "down"
 		self.scancodes[109] = "pgdown"
-		self.scancodes[113] = "volume mute"
-		self.scancodes[114] = "volume down"
-		self.scancodes[115] = "volume up"
+		self.scancodes[113] = "mute"
+		self.scancodes[114] = "volumedown"
+		self.scancodes[115] = "volumeup"
 		self.scancodes[158] = "back" #browser back
 		self.scancodes[172] = "home" #home key
 

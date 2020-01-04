@@ -1,0 +1,47 @@
+{
+    "hdmiCfgPath": "/tmp/imc_hdmi.txt",
+    "httpServerIp": {
+        "ip": "127.0.0.1",
+        "port": "11111"
+    },
+    "ipcOsdPort": 40001,
+    "ipcWmPort": 40002,
+    "mpv": {
+        "parameters": [
+            "mpv",
+            "--fs",
+            "--start=+{start}",
+            "--no-border",
+            "--no-input-default-bindings",
+            "{path}",
+            "--really-quiet",
+            "--no-osc",
+            "--no-input-terminal",
+            "--input-ipc-server={socket}"
+        ]
+    },
+    "music": {
+        "autoplay": "false",
+        "rootdir": "/mnt/Ishamedia",
+        "types": "mp3,wav"
+    },
+    "playlist": {
+        "rootdir": "/mnt/Ishamedia",
+        "types": "imc,json"
+    },
+    "settings": {
+        "audioSource": 0,
+        "hdmiBoost": 4,
+        "hdmiResolution": 0,
+        "osdTime": 5,
+        "runtimeInterval": 1,
+        "screensaverTime": 5,
+        "volIncVal": 5
+    },
+    "tmpdir": "/tmp",
+    "video": {
+        "autoplay": "false",
+        "rootdir": "/mnt/Ishamedia",
+        "types": "mp4"
+    }
+}

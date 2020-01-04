@@ -78,23 +78,29 @@ class FileList(SelectListView):
             #
             if self.type == "video" or self.type=="audio":
                 if includes.config[self.type]['autoplay'] == 'true':
-                    dirs, docs = self._getDirsAndDocs(path)
+                    dirs, docs = self._getDirsAndDocs(os.path.dirname(path))
                     i = 0
 
+                    found = False
                     for file in docs:
                         tmpPath = os.path.join(os.path.dirname(path), file)
-                        playlist.update(
-                            createPlayListEntry(tmpPath, i, 0)
-                        )
 
-                        i = i + 1
+                        if tmpPath == path or found:
+                            found = True
+
+                            playlist.update(
+                                createPlayListEntry(tmpPath, i, 0)
+                            )
+
+                            i = i + 1
+
+                    logging.error(f"Thomas: playlist = {playlist}")
                 else:
                     playlist.update(
                         createPlayListEntry(path, 0, 0)
                     )
 
             elif self.type == "playlist":
-                logging.error(f"Thomas: --------------------- path = {path}")
                 if self.plistHook is not None:
                     playlist = self.plistHook(path)
 
@@ -152,7 +158,6 @@ class FileList(SelectListView):
            path information
 
         '''
-        logging.error(f"Thomas: is subdir {isSubdir}")
         if isSubdir and self.showDirs:
             self.add("...", True)
 

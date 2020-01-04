@@ -274,7 +274,6 @@ class SelectLabelBg(SelectLabel):
 
     def size_change(self, widget, value):
         self.back.size = value
-        logging.error("SelectlabelBg size change")
         self.text_size = (value[0], self.text_size[1])
 
         self.width = self.marginL + value[0] + self.marginR
@@ -451,7 +450,6 @@ class SelectListView(Select, ScrollView):
         else:
             increment = True
 
-        logging.error("Thomas:wid = {}".format(self.wId))
         if self.wId < len(self.widgets) - 1:
             if increment:
                 self.wId = self.wId + 1

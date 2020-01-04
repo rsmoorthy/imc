@@ -57,7 +57,7 @@ class PlayerCore():
 
     @synchronized(playerSync)
     def isPaused(self):
-        return not self.player.isPlaying()
+        return self.player.isPaused()
 
     @synchronized(playerSync)
     def isPlaying(self):
@@ -147,6 +147,7 @@ class PlayerCore():
 
             if not self.cmdQueue.empty():
                 cmd = self.cmdQueue.get()
+                self.cmdQueue.task_done()
 
                 if cmd['cmd'] == "enter":
                     enter = True
@@ -161,6 +162,7 @@ class PlayerCore():
                     entryId = 0
                     state = "idle"
                     play = False
+                    self.osdDisable(None)
 
                 elif cmd['cmd'] == "previous":
                     previous = True
@@ -169,8 +171,8 @@ class PlayerCore():
                     next = True
 
                 elif cmd['cmd'] == "end":
+                    logging.error("Thomas: cmd = end received....")
                     end = True
-                    logging.error(f"Thomas: end called  _Db = {self._db} / {self._writeDb}")
                     if self._db != None and self._writeDb != None:
                         self._db['runtime'] = 0
                         self._db['mediaPath'] = path
@@ -180,11 +182,14 @@ class PlayerCore():
                     if not play:
                         playlist = cmd['playlist']
                         check = checkPlaylist(playlist)
-                        logging.error("THomas:: check playlist = {}  / {}".format(check, playlist) )
                         if check[1] == 0:
                             play = True
+                            self.osdEnable("osd")
                         else:
                             logging.error("PlayerCore: playlist format error = {}".format(check))
+
+
+
                 self.cmdBlock.release()
             #Debug prints for state
             #
@@ -201,12 +206,15 @@ class PlayerCore():
                     state = "pre"
                     entry = playlist[str(entryId)]
                     logging.error("EntryId play: {} / {}".format(entryId, entry))
+                    self.osdDisable(None)
+                    self.osdEnable("playerCore")
 
             elif state == "pre":
                 if type(entry['pre']) == str and entry['pre'].lower() == "blackscreen":
                     self.activateColorBar(1)
                     self.screenSaverRun(1)
                     state = "preWait"
+                    flags['preWait'] = False
 
                 else:
                     state = "play"
@@ -215,10 +223,12 @@ class PlayerCore():
                 if enter:
                     enter = False
                     state = "play"
+
                 elif previous:
                     previous = False
                     entryId = clipInt(entryId - 1, 0, 99999)
                     state = "idle"
+
                 elif next:
                     next = False
                     state = "end"
@@ -228,6 +238,8 @@ class PlayerCore():
                 tSeek = entry['start']
                 self.player.start(path, tSeek)
                 state = "waitEnd"
+                self.osdDisable(None)
+                self.osdEnable("osd")
 
             elif state == "waitEnd":
                 if end:
@@ -280,10 +292,16 @@ class PlayerCore():
                             enter = stop = next = previous = play = end = once = False
                             entry = None
                             entryId = 0
+                            self.osdDisable(None)
 
                     state = "idle"
                     end = False
 
+    def osdDisable(self, args):
+        logging.warning("PlayerCore: osdDisable method has not been assigned!!!!")
+
+    def osdEnable(self, args):
+        logging.warning("PlayerCore: osdEnable method has not been assigned!!!!")
 
     def __init__(self, **kwargs):
         self._runtimeInterval = kwargs.pop('runtimeInterval', 1)

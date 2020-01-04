@@ -5,15 +5,32 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.graphics import Rectangle, Color
 from kivy.uix.button import Button
+from kivy.uix.label import Label
 from kivy.app import App
 
 from selectables.selectable_items import Select
 from selectables.buttons import SelectButton
+from selectables.volume_widget import VolumeIndicatorMain
 import includes
 
 
 class MenuStrip(StackLayout):
     widgets = []
+
+    def _getWidgetHeight(self):
+        height = 0
+        for item in self.widgets:
+            height = height + item['btn'].height
+
+        return height
+    def _changeSize(self, widget, size):
+        tmp = self._getWidgetHeight()
+
+        self.bottomContainer.height = size[1] - tmp
+
+
+    def addContainer(self):
+        self.add_widget(self.bottomContainer)
 
     def addItem(self, imgPath, id, content, bgColor, enaColor):
         selBtn = SelectButton(
@@ -35,6 +52,7 @@ class MenuStrip(StackLayout):
 
         self.widgets.append(d)
 
+
         #add item to the menu so it will be visible
         self.add_widget(selBtn)
 
@@ -44,7 +62,14 @@ class MenuStrip(StackLayout):
         self.orientation='lr-tb'
         self.size_hint_x = None
         self.width = 160
-        #self.spacing = [0, 8]
+
+        self.bottomContainer = StackLayout(
+            orientation="bt-lr",
+            size_hint=(None, None),
+            width=160,
+        )
+
+        self.bind(size=self._changeSize)
 
 
 class ImcTabview(Select, GridLayout):
@@ -68,12 +93,10 @@ class ImcTabview(Select, GridLayout):
                 return
 
     def setContent(self, id, content):
-        logging.error("Thomas: setContent called")
         for i in range(len(self.strip.widgets)):
             widget = self.strip.widgets[i]
 
             if int(id) == int(widget['id']):
-                logging.error("Set content for id = {} / content = {}".format(id, content))
                 self.strip.widgets[i]['content'] = content
 
                 return
@@ -84,17 +107,14 @@ class ImcTabview(Select, GridLayout):
                 return widget['btn']
 
     def update(self, args):
-        logging.error("Thomas: update menu container")
         self.clear_widgets()
         self.add_widget(self.strip)
         self.add_widget(self.curWidget['content'])
-        logging.error("Thomas: update content = {}".format(self.curWidget['content']))
 
 
     def __init__(self, **kwargs):
         idList = kwargs.pop('idList', [0,1,2,3,4])
         self.root = kwargs.pop('root', None)
-        logging.error("Thomas: container kwargs = {}".format(kwargs))
 
         super(ImcTabview, self).__init__(**kwargs)
 
@@ -116,6 +136,15 @@ class ImcTabview(Select, GridLayout):
         self.add_widget(self.strip)
         self.curWidget = self.strip.widgets[0]
 
+        self.volumeIndicator = VolumeIndicatorMain(
+            bgColor=includes.styles['menuBarColor'],
+            color = includes.colors['imcLigthGray'],
+            highlightColor = includes.styles['enaColor0']
+        )
+
+        #self.bottomContainer.add_widget(self.volumeInd)
+        self.strip.bottomContainer.add_widget(self.volumeIndicator)
+        self.strip.addContainer()
         self.bind(size=self.changeSize)
 
 

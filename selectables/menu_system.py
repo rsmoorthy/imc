@@ -76,7 +76,7 @@ class MenuSystem(StackLayout):
             self.ipAddress.text="IP WiFi:  [color=#0f85a5]{}[/color]".format(self.getIpAddress())
 
             #Player values
-            
+
 
 
     def _autoReplay(self, id):
@@ -93,7 +93,6 @@ class MenuSystem(StackLayout):
         #TODO: os.system("/sbin/reboot")
 
     def _shutdown(self, args):
-        logging.error("Thomas:.........{}".format(self.mainMenu))
         self.mainMenu._powerOffShowMenu()
 
     def closeCrashMessage(self, args):
@@ -154,7 +153,6 @@ class MenuSystem(StackLayout):
 
 
         if includes.db['runtime'] != 0:
-            logging.error("------------------Thomas: runtime = {}".format(includes.db['runtime']))
             headerText = "System crashed"
             timeText = time.strftime('%H:%M:%S', time.gmtime(includes.db['runtime']))
             text = "System crashed while playing \n"
