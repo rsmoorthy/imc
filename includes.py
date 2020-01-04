@@ -1,6 +1,5 @@
 #from player import *
 #from vlc_player import Player
-from mpv_player import Player
 from screensaver import *
 import os
 import logging
@@ -39,24 +38,14 @@ defined = True
 colors = {
     'white': (1,1,1,1),
     'gray': (0.4,0.4,0.4,1),
-    'darkgray': (0.2,0.2,0.2,1),
-    'darkestgray': (0.1,0.1,0.1,1),
-    'defaultGray': hexColor('#303030'),
-    'btngray': hexColor('#575757'),
-    'red': (0.5,0.0,0.0,0.8),
-    'lightred': (0.8,0.2,0.2,0.3),
     'black' : (0, 0, 0, 1),
     'darkblue': hexColor('#2c2c57'),
-    'blue' : (0.5, 0.5, 1, 1),
-    'oldblue': hexColor('#0f85a5'),
     'lightblue' : hexColor('#035972'),
-    'orange' : (1,0.5,0.2,0.5),
-    'ishaOrange' : hexColor('#F15B28'),
     #These are the main color used for the GUI
+    'oldblue': hexColor('#0f85a5'),
     'imcBlue': hexColor('#063541'), #used for lines, deviders etc
     'imcLigthGray': hexColor('#3d3d3d'), #used for lined, divider etc
     'imcDarkGray': hexColor('#2c2c2c'), #used for lined, divider etc
-
 }
 
 styles = {
@@ -64,18 +53,10 @@ styles = {
     'defaultEnaColor': colors['oldblue'],
     'defaultBg': colors['black'], #TODO: still used?
     'enaColor0': colors['oldblue'],
-    'enaColor1': colors['orange'],
-    'warning': colors['lightred'],
     'defaultFiller': colors['lightblue'],
     'menuBarColor': colors['imcDarkGray'],
-    #'itemColor0': colors['darkgray'],
-    'itemColor0': colors['black'],
-    'itemColor1': colors['black'],
-    #'itemColor1': colors['darkestgray'],
-    'volumeIndicatorBG': colors['gray'],
-    'volumeIndicatorColor': colors['blue'],
-    'headerColor0': colors['darkblue'],
-    'headerColor1': colors['gray'],
+    'itemColor0': colors['black'], #FileList fiew even row color
+    'itemColor1': colors['black'], #Filelist view odd row color
     #sizes
     'selectItemHeight': 60,
     "fontSize": "25sp",
@@ -91,8 +72,6 @@ styles = {
     'dialogMsgContent' : colors['imcLigthGray'],
 }
 
-#Media player instance we can use in all modules
-player = Player()
 
 #configuration file
 defaultConf = {
@@ -189,7 +168,3 @@ except:
 
 def writeDb():
     writeJson(dbPath, db)
-
-#
-# Some utilities and helpers
-#

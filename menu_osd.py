@@ -28,7 +28,7 @@ from kivy.uix.gridlayout import GridLayout
 from selectables.time_selector import TimeSelect
 from selectables.selectable_items import SelectLabel, SelectLabelBg
 from selectables.buttons import SelectButton
-from selectables.volume_widget import VolumeIndicatorMain
+from selectables.volume_widget import VolumeIndicator
 from audio_controler import AudioController
 
 import includes
@@ -224,7 +224,7 @@ class MenuOSD(StackLayout):
                 if not x11Visible:
                     self._osdWindowFront()
                     x11Visible = True
-                    
+
             elif not volIsVisible and not isVisible:
                 if x11Visible:
                     self._osdWindowBack()
@@ -316,7 +316,7 @@ class MenuOSD(StackLayout):
 
     def onEnterPlayPause(self, args):
         try:
-            '''Callback function which needs to be set by parent to execute pause fct of player'''
+            '''Callback function which needs to execute pause fct of player'''
             if self._playerIsPlaying() and not self._playerIsPaused():
                 self._sendPostRequest(imcRequests['Player']['Pause'])
             else:
@@ -401,13 +401,14 @@ class MenuOSD(StackLayout):
         winBoundaryLeft = winCenter - delta
         winBoundaryRight = winCenter + delta
 
-        self.gap0.width = winBoundaryLeft-(5*self.btnNext.width) #All buttons must be the same size, otehrwise this will not work
-        self.gap.width = value[0] - winCenter - delta - self.volume.width - 10 #-10 is for 10pixel gap on right side
+        self.gap0.width = winBoundaryLeft-(5*self.btnNext.width)
+
+        #-10 is for 10pixel gap on right side
+        self.gap.width = value[0] - winCenter - delta - self.volume.width - 10
 
     def _addAllWidgets(self):
         '''Add all widgets to the OSD and hide them with opacity = 0'''
         self.widgets.append(self.btnPlayPause)
-        #self.widgets.append(self.btnPlay) #TODO now mergin with pause....
         self.widgets.append(self.btnStop)
         self.widgets.append(self.btnPrevious)
         self.widgets.append(self.btnNext)
@@ -532,7 +533,7 @@ class MenuOSD(StackLayout):
         )
         self.gap.opacity = 0
 
-        self.volumeTmp = VolumeIndicatorMain(
+        self.volumeTmp = VolumeIndicator(
             bgColor=includes.styles['defaultBg'],
             color = includes.colors['imcLigthGray'],
             highlightColor = includes.styles['enaColor0'],
@@ -594,8 +595,6 @@ class MenuOSD(StackLayout):
         self.serverTr.start()
 
 
-
-
 class OSDMain(App):
 
     def build(self):
@@ -607,7 +606,7 @@ class OSDMain(App):
 #If we start OSD as standalone we use http request to control functions
 def run():
     main = OSDMain()
-    #Window.size = (Window.width, 50)
+#    Window.size = (Window.width, 50)
     main.run()
 
 if __name__ == "__main__":

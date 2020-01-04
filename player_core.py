@@ -5,13 +5,10 @@ import time
 import threading
 import logging
 
-
 logging.basicConfig(level=logging.DEBUG)
 
 from queue import Queue
 from helper import synchronized, createPlayListEntry, checkPlaylist, clipInt
-
-
 
 class PlayerCore():
     #Static variables
@@ -171,7 +168,6 @@ class PlayerCore():
                     next = True
 
                 elif cmd['cmd'] == "end":
-                    logging.error("Thomas: cmd = end received....")
                     end = True
                     if self._db != None and self._writeDb != None:
                         self._db['runtime'] = 0
@@ -194,7 +190,7 @@ class PlayerCore():
             #Debug prints for state
             #
             if state != lastState:
-                logging.error("PlayerCore: state = {} | enter = {} | stop = {} | next = {} | prev = {} | play = {} | end = {} | once = {} |"
+                logging.debug("PlayerCore: state = {} | enter = {} | stop = {} | next = {} | prev = {} | play = {} | end = {} | once = {} |"
                     .format(state, enter, stop, next, previous, play, end, once))
 
                 lastState = state
@@ -322,10 +318,6 @@ class PlayerCore():
 
 
 if __name__ == "__main__":
-    #logging.basicConfig(level=logging.DEBUG)
-    # import faulthandler
-    # faulthandler.enable()
-
     import time
 
     def screenSaver(mode):

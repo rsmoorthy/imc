@@ -82,7 +82,6 @@ class Player():
             return 0
 
         try:
-            #tmp = json.loads(ret[0])
             if 'data' in ret:
                 return int(ret['data'])
 

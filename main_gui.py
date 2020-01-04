@@ -279,11 +279,9 @@ class MainMenu(ImcTabview):
         self.menuSystem.callbackPlaySingle = includes.playerCore.startSingle
         self.setContent(selectId['system'], self.menuSystem)
 
-        #TODO:
-        #for navigatiing in the system menu. TODO: This functionality should be moved to the menu system itself
-        self.selectableWidgets[selectId['systemMsg']] = self.menuSystem.handler
-        # self.selectableWidgets[selectId['systemBtn']] = self.menuSystem.btn
 
+        self.selectableWidgets[selectId['systemMsg']] = self.menuSystem.handler
+        
         #Video FIle menu
         self.menuVideo = MenuVideoAudio(
                 #id="0",

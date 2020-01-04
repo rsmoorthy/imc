@@ -10,7 +10,7 @@ from kivy.app import App
 
 from selectables.selectable_items import Select
 from selectables.buttons import SelectButton
-from selectables.volume_widget import VolumeIndicatorMain
+from selectables.volume_widget import VolumeIndicator
 import includes
 
 
@@ -136,7 +136,7 @@ class ImcTabview(Select, GridLayout):
         self.add_widget(self.strip)
         self.curWidget = self.strip.widgets[0]
 
-        self.volumeIndicator = VolumeIndicatorMain(
+        self.volumeIndicator = VolumeIndicator(
             bgColor=includes.styles['menuBarColor'],
             color = includes.colors['imcLigthGray'],
             highlightColor = includes.styles['enaColor0']

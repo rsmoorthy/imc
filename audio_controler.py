@@ -56,7 +56,7 @@ class AudioController():
         self._setVolume(volume)
         self.indicator.value = self.volume
 
-    def audioFadeout(self, t0, t1, t2, v0, v1, incVal):
+    def _audioFadeout(self, t0, t1, t2, v0, v1, incVal):
         '''
         Audio fade out happens in 3 sections to allow for non linearity of volume
         All time values are given in seconds
@@ -67,7 +67,6 @@ class AudioController():
 
         y = mx + b
         '''
-        logging.error("Thomas: audio fader called....")
         volume = self.getVolume()
         v0 = clipInt(v0, 0, volume)
         v1 = clipInt(v1, 0, v0)
@@ -123,7 +122,7 @@ class AudioController():
         return tmp
 
     def fadeOut(self, *args, **kwargs):
-        #audioFadeout(10,12,15,60,40,0.1)
+        self._audioFadeout(10,12,15,60,40,0.1)
         return True
 
     def __init__(self, incVal, indicator, dryRun):

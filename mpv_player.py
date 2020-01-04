@@ -62,14 +62,10 @@ class Player():
         if event['event_id'] == mpv.MpvEventID.END_FILE:
             self.onPlayEnd(None)
             self._isPlaying = False
-            #self.stop() #to terminate everything properly
-
 
         elif event['event_id'] == mpv.MpvEventID.SHUTDOWN:
             self.onPlayShutdown(None)
             self._isPlaying = False
-            #self.stop() #to terminate everyting properly
-
 
     def start(self, path, tSeek):
         self.mpvPlayer = mpv.MPV(start=tSeek)#, fs="yes")
@@ -107,7 +103,9 @@ class Player():
         self._isPlaying = False
 
 
-
+#
+# Test Application
+#
 
 if __name__ == "__main__":
     import threading
@@ -125,13 +123,7 @@ if __name__ == "__main__":
         pl.stop()
         print("after")
         print(threading.active_count())
-        #print(pl.mpvPlayer.get_xwindow())
-        #pl.togglePause()
 
-        #pl.mpvPlayer.toggle_fullscreen()
-
-        # while test:
-        #     sleep(2)
         print(pl.getRuntime()) # causes the problem....
         #     print(pl.isPaused())
 

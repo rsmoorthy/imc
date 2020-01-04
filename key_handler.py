@@ -66,11 +66,8 @@ class KeyHandler():
 						else:
 							try:
 								self.onPress((event.code, self.scancodes[event.code]))
-								#self.onPress((event.code, self.scancodes[event.code]))
 							except AttributeError as e:
-								# logging.error("keyHandler: [AttributeError] {}".format(e))
 								logging.error("keyHandler: [AttributeError] {}".format(traceback.format_exc()))
-
 							except TypeError as e:
 								logging.error("keyHandler: [Type Error] {}".format(traceback.format_exc()))
 							except KeyError as e:
@@ -82,7 +79,6 @@ class KeyHandler():
 
 			except BlockingIOError:
 				pass
-
 
 
 	def __init__(self):

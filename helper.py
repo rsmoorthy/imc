@@ -123,8 +123,6 @@ def mpvParams(start, path, config):
             sock = os.path.join(config['tmpdir'], 'socket')
             tmp.append(item.format(socket=sock))
 
-        # elif "{configFile}" in item:
-        #     item = item.format(configFile=config)
         else:
             tmp.append(item)
 

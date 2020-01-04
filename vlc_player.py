@@ -1,3 +1,6 @@
+#
+# This code is experimental not complete yet
+#
 import vlc
 from time import sleep
 import queue

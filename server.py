@@ -13,10 +13,6 @@ from json_handler import ERR_KEY, ERR_VALUE, ERR_MISSING_PARAMS, ERR_METHOD_NOT_
 
 cmdCallback = None
 
-
-
-
-
 def _cmdCallback(self, data):
     return cmdCallback(data)
 
@@ -110,10 +106,6 @@ class WebServer(http.server.BaseHTTPRequestHandler, object):
 
     def log_message(self, format, *args):
         return
-
-    # def __init__(self, *args, **kwargs):
-    #     super(WebServer, self).__init__(*args, **kwargs)
-    #     self.serverSemaphore = threading.Semaphore()
 
 #
 # For Standalone testing only

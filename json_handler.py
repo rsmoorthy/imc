@@ -239,7 +239,7 @@ def _input(jsonId, params):
 def _inputExecuteAction(jsonId, params):
     action = params['action']
 
-    if action == "mute":           #TODO: we need to make mute toggle command available
+    if action == "mute":
         try:
             _systemCallbacks['_cmdMuteToggle'](None, None)
         except:
