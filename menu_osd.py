@@ -29,7 +29,7 @@ from gui.time_selector import TimeSelect
 from gui.labels import SelectLabel, SelectLabelBg
 from gui.buttons import SelectButton
 from gui.volume_widget import VolumeIndicator
-from audio_controler import AudioController
+
 
 import includes
 from ipc import Ipc

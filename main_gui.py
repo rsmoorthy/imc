@@ -20,7 +20,7 @@ from gui.menu_video_audio import MenuVideoAudio
 from gui.menu_settings import MenuSettings
 from gui.menu_system import MenuSystem
 from gui.labels import SelectLabelBg
-from audio_controler import AudioController
+from audio_controller import AudioController
 
 import control_tree
 import includes
