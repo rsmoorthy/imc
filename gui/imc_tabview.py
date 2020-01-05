@@ -8,8 +8,8 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.app import App
 
-from selectables.buttons import SelectButton
-from selectables.volume_widget import VolumeIndicator
+from gui.buttons import SelectButton
+from gui.volume_widget import VolumeIndicator
 import includes
 
 

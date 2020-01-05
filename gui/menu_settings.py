@@ -6,9 +6,9 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.checkbox import CheckBox
 from kivy.app import App
 
-from selectables.spinners import SelectSpinner, SelectSpinnerBool
-from selectables.labels import SelectLabel, SelectLabelBg
-from selectables.buttons import SelectButton
+from gui.spinners import SelectSpinner, SelectSpinnerBool
+from gui.labels import SelectLabel, SelectLabelBg
+from gui.buttons import SelectButton
 
 import includes
 from helper import rotateInt

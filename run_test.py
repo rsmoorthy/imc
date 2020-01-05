@@ -1,6 +1,6 @@
-from selectables.file_list import fileListTest
-import selectables.playlist_viewer as plviewer
-from selectables.selectable_items import testImageBg
+from gui.file_list import fileListTest
+import gui.playlist_viewer as plviewer
+from gui.selectable_items import testImageBg
 import sys
 
 
@@ -16,7 +16,7 @@ if sys.argv[1] == "imagebg":
     testImageBg()
 
 if sys.argv[1] == "selectviewItem":
-    from selectables.select_list_view import TestSelectListviewItem
+    from gui.select_list_view import TestSelectListviewItem
     TestSelectListviewItem()
 
 if sys.argv[1] == "osdctrl":
@@ -24,5 +24,5 @@ if sys.argv[1] == "osdctrl":
     TestOsdRemoteIf()
 
 if sys.argv[1] == "volumemain":
-    from selectables.volume_widget import TestVolumeIndicatorMain as test
+    from gui.volume_widget import TestVolumeIndicatorMain as test
     test()

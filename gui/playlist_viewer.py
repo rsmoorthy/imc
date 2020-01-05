@@ -8,9 +8,9 @@ from kivy.uix.label import Label
 from kivy.graphics import Color, Line
 from kivy.uix.relativelayout import RelativeLayout
 
-from selectables.labels import SelectLabelBg
-from selectables.file_list import FileList
-from selectables.select_list_view import SelectListView
+from gui.labels import SelectLabelBg
+from gui.file_list import FileList
+from gui.select_list_view import SelectListView
 import includes
 
 

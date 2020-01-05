@@ -1,8 +1,8 @@
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
-from selectables.images import ImageBg
-from selectables.labels import SelectLabel
+from gui.images import ImageBg
+from gui.labels import SelectLabel
 from helper import rotateInt
 
 import includes

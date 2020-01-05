@@ -1,6 +1,6 @@
 import logging
 
-from selectables.labels import SelectLabelBg
+from gui.labels import SelectLabelBg
 from kivy.uix.stacklayout import StackLayout
 from kivy.properties import ObjectProperty
 

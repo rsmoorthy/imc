@@ -18,8 +18,8 @@ from kivy.core.window import Window
 import includes
 from helper import clipInt
 
-from selectables.images import ImageBg
-from selectables.labels import SelectLabelBg
+from gui.images import ImageBg
+from gui.labels import SelectLabelBg
 
 class VolumeIndicator(RelativeLayout):
     value = ObjectProperty()

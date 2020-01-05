@@ -1,8 +1,8 @@
 from kivy.uix.gridlayout import GridLayout
 import logging
 
-from selectables.playlist_viewer import PlaylistFileView
-from selectables.file_list import FileList
+from gui.playlist_viewer import PlaylistFileView
+from gui.file_list import FileList
 from includes import styles
 
 class MenuVideoAudio(PlaylistFileView):

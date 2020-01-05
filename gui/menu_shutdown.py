@@ -4,9 +4,9 @@ from kivy.app import App
 from kivy.core.window import Window
 import logging
 
-from selectables.labels import SelectLabel
-from selectables.buttons import SelectButton
-from selectables.images import ImageBg
+from gui.labels import SelectLabel
+from gui.buttons import SelectButton
+from gui.images import ImageBg
 import includes
 from helper import rotateInt
 

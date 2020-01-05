@@ -1,4 +1,4 @@
-from selectables.images import ImageBg
+from gui.images import ImageBg
 from kivy.uix.button import Button
 from kivy.graphics import Rectangle, Color
 

@@ -25,10 +25,10 @@ from kivy.app import App
 from kivy.core.window import Window
 from kivy.uix.gridlayout import GridLayout
 
-from selectables.time_selector import TimeSelect
-from selectables.labels import SelectLabel, SelectLabelBg
-from selectables.buttons import SelectButton
-from selectables.volume_widget import VolumeIndicator
+from gui.time_selector import TimeSelect
+from gui.labels import SelectLabel, SelectLabelBg
+from gui.buttons import SelectButton
+from gui.volume_widget import VolumeIndicator
 from audio_controler import AudioController
 
 import includes

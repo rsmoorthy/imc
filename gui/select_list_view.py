@@ -1,5 +1,5 @@
-from selectables.labels import SelectLabelBg
-from selectables.images import ImageBg
+from gui.labels import SelectLabelBg
+from gui.images import ImageBg
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty
 from kivy.uix.gridlayout import GridLayout

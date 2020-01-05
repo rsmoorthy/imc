@@ -7,8 +7,8 @@ from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.graphics import Rectangle, Color
 
-from selectables.labels import SelectLabelBg
-from selectables.buttons import SelectButton
+from gui.labels import SelectLabelBg
+from gui.buttons import SelectButton
 import includes
 from helper import clipInt
 

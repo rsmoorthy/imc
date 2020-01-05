@@ -9,8 +9,8 @@ from kivy.uix.label import Label
 from kivy.uix.gridlayout import GridLayout
 
 import includes
-from selectables.dialog import DialogHandler, DialogButtons
-from selectables.dialog import msgAutoRestart
+from gui.dialog import DialogHandler, DialogButtons
+from gui.dialog import msgAutoRestart
 
 class MenuSystem(StackLayout):
     def enable(self, args):

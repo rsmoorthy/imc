@@ -4,7 +4,7 @@ import sys
 
 import includes
 from helper import createPlayListEntry
-from selectables.select_list_view import SelectListView
+from gui.select_list_view import SelectListView
 
 
 class FileList(SelectListView):

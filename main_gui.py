@@ -12,14 +12,14 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from selectables.imc_tabview import ImcTabview
-from selectables.menu_shutdown import MenuShutdown
-from selectables.file_list import FileList
-from selectables.playlist_viewer import PlaylistMenu
-from selectables.menu_video_audio import MenuVideoAudio
-from selectables.menu_settings import MenuSettings
-from selectables.menu_system import MenuSystem
-from selectables.labels import SelectLabelBg
+from gui.imc_tabview import ImcTabview
+from gui.menu_shutdown import MenuShutdown
+from gui.file_list import FileList
+from gui.playlist_viewer import PlaylistMenu
+from gui.menu_video_audio import MenuVideoAudio
+from gui.menu_settings import MenuSettings
+from gui.menu_system import MenuSystem
+from gui.labels import SelectLabelBg
 from audio_controler import AudioController
 
 import control_tree
