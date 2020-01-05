@@ -6,13 +6,14 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.checkbox import CheckBox
 from kivy.app import App
 
-from selectables.selectable_items import SelectSlider, Select, SelectCheckBox, SelectLabelBg, SelectSpinner, SelectSpinnerBool, SelectLabel
+from selectables.spinners import SelectSpinner, SelectSpinnerBool
+from selectables.labels import SelectLabel, SelectLabelBg
 from selectables.buttons import SelectButton
 
 import includes
 from helper import rotateInt
 
-class MenuSettings(GridLayout, Select):
+class MenuSettings(GridLayout):
     widgets = []
     wId = 0
     widName = []
@@ -47,27 +48,20 @@ class MenuSettings(GridLayout, Select):
 
 
     def right(self, args):
-        logging.debug("MenuSettings: right called")
-        #if self.widgets[self.wId].hasLeftRight:
         return self.widgets[self.wId].right(None)
 
         return False
 
     def left(self, args):
-        logging.debug("MenuSettings: left called")
-        #if self.widgets[self.wId].hasLeftRight:
         return self.widgets[self.wId].left(None)
 
         return False
 
 
     def enter(self, args):
-        logging.error("enter button pressed....")
-        logging.debug("MenuSettings: enter called, args = {} / wid = {}".format(args, self.wId))
         self.widgets[self.wId].enter(args)
 
     def _saveSettings(self, args):
-        logging.error("Save config....")
         def creaetEmptyFile(path):
             try:
                 open(path, 'x+')

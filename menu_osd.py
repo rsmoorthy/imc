@@ -26,7 +26,7 @@ from kivy.core.window import Window
 from kivy.uix.gridlayout import GridLayout
 
 from selectables.time_selector import TimeSelect
-from selectables.selectable_items import SelectLabel, SelectLabelBg
+from selectables.labels import SelectLabel, SelectLabelBg
 from selectables.buttons import SelectButton
 from selectables.volume_widget import VolumeIndicator
 from audio_controler import AudioController
@@ -593,6 +593,8 @@ class MenuOSD(StackLayout):
         self.serverTr = threading.Thread(target=self._keyHandler)
         self.serverTr.setDaemon(True)
         self.serverTr.start()
+
+        self.ipc = Ipc()
 
 
 class OSDMain(App):

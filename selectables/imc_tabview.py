@@ -8,7 +8,6 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.app import App
 
-from selectables.selectable_items import Select
 from selectables.buttons import SelectButton
 from selectables.volume_widget import VolumeIndicator
 import includes
@@ -72,7 +71,7 @@ class MenuStrip(StackLayout):
         self.bind(size=self._changeSize)
 
 
-class ImcTabview(Select, GridLayout):
+class ImcTabview(GridLayout):
     def enable(self, id):
         for widget in self.strip.widgets:
             if int(id) == int(widget['id']):
@@ -157,9 +156,9 @@ class ImcTabview(Select, GridLayout):
 
 
 
-#############################
-#############################
-#############################
+#------------------------------------------------------------------------------
+# Test application
+#------------------------------------------------------------------------------
 class Test(App):
     def testFunc(self):
         import time

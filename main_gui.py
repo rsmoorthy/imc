@@ -19,7 +19,7 @@ from selectables.playlist_viewer import PlaylistMenu
 from selectables.menu_video_audio import MenuVideoAudio
 from selectables.menu_settings import MenuSettings
 from selectables.menu_system import MenuSystem
-from selectables.selectable_items import SelectLabelBg
+from selectables.labels import SelectLabelBg
 from audio_controler import AudioController
 
 import control_tree
@@ -281,7 +281,7 @@ class MainMenu(ImcTabview):
 
 
         self.selectableWidgets[selectId['systemMsg']] = self.menuSystem.handler
-        
+
         #Video FIle menu
         self.menuVideo = MenuVideoAudio(
                 #id="0",

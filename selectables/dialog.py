@@ -7,7 +7,7 @@ from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.graphics import Rectangle, Color
 
-from selectables.selectable_items import SelectLabelBg, Select
+from selectables.labels import SelectLabelBg
 from selectables.buttons import SelectButton
 import includes
 from helper import clipInt
@@ -157,22 +157,6 @@ class DialogButtons(GridLayout):
 
 
 class Dialog(GridLayout):
-    # content = None
-    # sidebar = None
-    # headterText = None
-    # text = None
-    # textColor = None
-    # btn = None
-    # contentColor = None
-    # headerColor = None
-    # headerHeight = None
-    # contentHeight = None
-    # headerText = None
-    # text = None
-    # borderHeight = None
-    # sidebarWidth = None
-    # buttonDesc = None
-    # dId = -1
 
     def enable(self, args):
         return self.btn.enable(args)
@@ -222,7 +206,6 @@ class Dialog(GridLayout):
             padding=[20, 0]
         )
 
-
         self.add_widget(self.headerContent)
 
         self.content = SelectLabelBg(
@@ -247,13 +230,9 @@ class Dialog(GridLayout):
             )
             self.add_widget(self.btn)
             self.height = self.headerHeight + self.contentHeight
-            #self.height = self.headerHeight + self.contentHeight + self.border.height + self.sidebarBtn.height
-
-        #self.add_widget(self.sidebarBorder)
-        #self.add_widget(self.border)
 
 
-class DialogHandler(StackLayout, Select):
+class DialogHandler(StackLayout):
     dialogList = []
     wId = -1
     sema = None

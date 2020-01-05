@@ -19,7 +19,7 @@ import includes
 from helper import clipInt
 
 from selectables.images import ImageBg
-from selectables.selectable_items import SelectLabelBg
+from selectables.labels import SelectLabelBg
 
 class VolumeIndicator(RelativeLayout):
     value = ObjectProperty()
@@ -32,7 +32,6 @@ class VolumeIndicator(RelativeLayout):
         self.label1.size = (tmp, size[1])
 
         if tmp == 0:
-            logging.error("Thomas: value is zero")
             self.image.imgSrc= "atlas://resources/img/pi-player/mute"
         else:
             self.image.imgSrc= "atlas://resources/img/pi-player/volume"

@@ -94,7 +94,6 @@ class FileList(SelectListView):
 
                             i = i + 1
 
-                    logging.error(f"Thomas: playlist = {playlist}")
                 else:
                     playlist.update(
                         createPlayListEntry(path, 0, 0)
@@ -179,7 +178,7 @@ class FileList(SelectListView):
             self.scroll_to(self.widgets[self.wId], animate=False)
 
             if self.isEnabled:
-                self.widgets[self.wId].enable(None) #TODO: is this needed?
+                self.widgets[self.wId].enable(None)
 
     def _getCurPath(self):
         '''

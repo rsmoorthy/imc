@@ -1,15 +1,13 @@
 import logging
 
-from selectables.selectable_items import SelectLabelBg, Select
+from selectables.labels import SelectLabelBg
 from kivy.uix.stacklayout import StackLayout
 from kivy.properties import ObjectProperty
-
 
 import includes
 from helper import clipInt
 
-
-class TimeSelect(StackLayout, Select):
+class TimeSelect(StackLayout):
     text = ObjectProperty("00:00:00")
 
     def getTimeInSec(self):
@@ -31,11 +29,9 @@ class TimeSelect(StackLayout, Select):
             self.sec1.text = value[7]
 
     def enable(self, args):
-        #logging.debug("TimeSelect: enable called...")
         return self.right(args)
 
     def disable(self, args):
-        #logging.debug("TimeSelect: disable called...")
         return self.left(args)
 
     def clear(self, args):

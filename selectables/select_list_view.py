@@ -1,6 +1,4 @@
-import logging
-
-from selectables.selectable_items import Select, SelectLabelBg
+from selectables.labels import SelectLabelBg
 from selectables.images import ImageBg
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty
@@ -9,7 +7,7 @@ from kivy.uix.stacklayout import StackLayout
 
 import includes
 
-class SelectListViewItem(StackLayout, Select):
+class SelectListViewItem(StackLayout):
     background_color = ObjectProperty(includes.styles['defaultBg'])
     fillerColor = ObjectProperty(includes.styles['defaultFiller'])
 
@@ -70,7 +68,7 @@ class SelectListViewItem(StackLayout, Select):
         self.bind(size=self.resize)
 
 
-class SelectListView(Select, ScrollView):
+class SelectListView(ScrollView):
     enaColor = ObjectProperty(includes.styles['defaultEnaColor'])
 
     def clearWidgets(self):
@@ -125,8 +123,6 @@ class SelectListView(Select, ScrollView):
         else:
             increment = True
             disTop = True
-
-
 
         if self.wId >= 1:
             self.widgets[self.wId].disable(None)
@@ -220,7 +216,9 @@ class SelectListView(Select, ScrollView):
 
 
 
-
+#------------------------------------------------------------------------------
+# Test Application
+#------------------------------------------------------------------------------
 def TestSelectListviewItem():
     '''
     Standalone test:

@@ -4,13 +4,13 @@ from kivy.app import App
 from kivy.core.window import Window
 import logging
 
-from selectables.selectable_items import Select, SelectLabelBg, SelectLabel
+from selectables.labels import SelectLabel
 from selectables.buttons import SelectButton
 from selectables.images import ImageBg
 import includes
 from helper import rotateInt
 
-class MenuShutdown(Select, AnchorLayout):
+class MenuShutdown(AnchorLayout):
     def enable(self, args):
         self.widgets[self.wId].disable(None)
         self.wId = rotateInt(self.wId + 1, 0, 2)
@@ -22,7 +22,6 @@ class MenuShutdown(Select, AnchorLayout):
         self.widgets[self.wId].enable(None)
 
     def enter(self, args):
-        logging.error("enter called")
         self.widgets[self.wId].onEnter()
 
     def _shutdown(self):
@@ -58,7 +57,6 @@ class MenuShutdown(Select, AnchorLayout):
 
         self.btnShutdown = SelectLabel(
             text="Power Off",
-            # background_color=includes.styles['defaultBg'],
             enaColor=includes.styles['defaultEnaColor'],
             size_hint_y=None,
             size_hint_x=None,
@@ -70,7 +68,6 @@ class MenuShutdown(Select, AnchorLayout):
 
         self.btnReboot = SelectLabel(
             text="Reboot",
-            # background_color=includes.styles['defaultBg'],
             enaColor=includes.styles['defaultEnaColor'],
             size_hint_y=None,
             size_hint_x=None,
@@ -80,7 +77,6 @@ class MenuShutdown(Select, AnchorLayout):
 
         self.btnCancel = SelectLabel(
             text="Cancel",
-            # background_color=includes.styles['defaultBg'],
             enaColor=includes.styles['defaultEnaColor'],
             size_hint_y=None,
             size_hint_x=None,

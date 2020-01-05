@@ -8,7 +8,7 @@ from kivy.uix.label import Label
 from kivy.graphics import Color, Line
 from kivy.uix.relativelayout import RelativeLayout
 
-from selectables.selectable_items import SelectLabelBg
+from selectables.labels import SelectLabelBg
 from selectables.file_list import FileList
 from selectables.select_list_view import SelectListView
 import includes
@@ -16,7 +16,7 @@ import includes
 
 class PlaylistViewHeader(GridLayout):
     def _changeSize(self, widget, size):
-        
+
         s = self.line0.size
         line_width = (size[0] - self.label_width - 2*self.spacing[0]) / 2
 
@@ -54,7 +54,6 @@ class PlaylistViewHeader(GridLayout):
         )
 
         line_width = (self.label_width - 2*self.spacing[0]) / 2
-        logging.error(line_width)
 
         self.line0 = SelectLabelBg(
             background_color=self.line_color,
@@ -110,7 +109,6 @@ class PlaylistFileContent(GridLayout):
             width=self.bar_width,
         )
 
-        logging.error(self.content)
         if self.bar_pos == 'right':
             self.add_widget(self.content)
             self.add_widget(self.bar)
@@ -181,11 +179,9 @@ class PlaylistMenu(GridLayout):
                 tmpData = self.playlistData
                 newPlaylist = {}
                 tmpRange = range(self.playlistMediaFilesContent.wId, len(self.playlistData))
-                logging.error(f"thomas:------------------ {tmpRange}")
 
                 k = 0
                 for i in tmpRange:
-                    logging.error(f"thomas: -----------i = {i}")
                     newPlaylist[str(k)] = (self.playlistData[str(i)])
                     k = k + 1
 
@@ -431,7 +427,7 @@ def test():
         def build(self):
 
             def dummyPlay(self):
-                logging.error("Dummy play has been called...")
+                logging.error("PlaylistViewer: Dummy play has been called...")
 
             self.menu = PlaylistMenu(
                 line_color_playlist=includes.colors['imcBlue'],
