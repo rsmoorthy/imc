@@ -208,7 +208,7 @@ class PlayerCore():
             elif state == "pre":
                 if type(entry['pre']) == str and entry['pre'].lower() == "blackscreen":
                     self.activateColorBar(1)
-                    self.screenSaverRun(1)
+                    self.screenSaverRun(0)
                     state = "preWait"
                     flags['preWait'] = False
 
@@ -279,19 +279,21 @@ class PlayerCore():
                     state = "end"
 
             elif state == "end":
-                    entryId = entryId + 1
-                    logging.debug("PLayerCore: entryId = {}".format(entry))
-                    if entryId >= len(playlist):
-                            play = False #stop plalist
-                            self.activateColorBar(0)
-                            self.screenSaverRun(1) #Stay on screen saver
-                            enter = stop = next = previous = play = end = once = False
-                            entry = None
-                            entryId = 0
-                            self.osdDisable(None)
+                self.activateColorBar(0)
+                
+                entryId = entryId + 1
+                logging.debug("PLayerCore: entryId = {}".format(entry))
+                if entryId >= len(playlist):
+                        play = False #stop plalist
 
-                    state = "idle"
-                    end = False
+                        self.screenSaverRun(1) #Stay on screen saver
+                        enter = stop = next = previous = play = end = once = False
+                        entry = None
+                        entryId = 0
+                        self.osdDisable(None)
+
+                state = "idle"
+                end = False
 
     def osdDisable(self, args):
         logging.warning("PlayerCore: osdDisable method has not been assigned!!!!")

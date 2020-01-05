@@ -120,10 +120,8 @@ class AudioController():
 
     def __init__(self, incVal, indicator, dryRun):
         self.incVal = incVal
-
-        self.dryRun = False
         self.volume = self._getVolume()
-        self.dryRun = dryRun
+
 
         self.lastVolume = self.volume
         self.isMuted = False

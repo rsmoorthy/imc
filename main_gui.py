@@ -48,9 +48,9 @@ class IshaGui(StackLayout):
 
     def changeFooterColor(self, mode):
         if mode == 0:
-            self.footer.enaColor = includes.styles['defaultBg']
+            self.footer.background_color = includes.styles['defaultBg']
         elif mode == 1:
-            self.footer.background_color = includes.styles['enaColor0']
+            self.footer.background_color = includes.colors['imcDarkGray']
 
 
     def __init__(self, **kwargs):
@@ -190,7 +190,7 @@ class MainMenu(ImcTabview):
         logging.debug(msg)
 
         if self.curId != selectId['osd']:
-            if self.screenSaver.active and self.screenSaver.ena :
+            if self.screenSaver.active and self.screenSaver.ena:
                 self.screenSaver.resetTime()
                 self.keyDownSemaphore.release()
                 return 0
@@ -257,7 +257,7 @@ class MainMenu(ImcTabview):
             db=includes.db
         )
         includes.playerCore.activateColorBar = includes.changeFooterColor
-        includes.playerCore.screenSaverRun = self.screenSaver.start
+        includes.playerCore.screenSaverRun = self.screenSaver.swtich
         includes.playerCore.osdEnable = self.osdEnable
         includes.playerCore.osdDisable = self.osdDisable
         self.selectableWidgets[selectId['playerCore']] = includes.playerCore

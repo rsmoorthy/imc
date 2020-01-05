@@ -53,6 +53,17 @@ class ScreenSaver():
                     self.active = True
                     self.screenManager.current = self.blackScreenName
 
+                elif cmd['cmd'] == 'switch':
+                    if cmd['mode'] == 0:
+                        self.ena = False
+                        self.idleCounter = 0
+                        self.active = False
+                        self.screenManager.current = self.blackScreenName
+                    else:
+                        self.ena = True
+                        self.idleCounter = 0
+                        self.active = False
+                        
 
     def start(self, args):
         self.ctrlQueue.put({'cmd':'start'})
@@ -67,6 +78,8 @@ class ScreenSaver():
         while self.ena:
             continue
 
+    def swtich(self, mode):
+        self.ctrlQueue.put({'cmd':'switch', 'mode':mode})
 
 
     def enable(self):
