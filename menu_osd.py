@@ -382,7 +382,6 @@ class MenuOSD(StackLayout):
     def _playerIsPlaying(self):
         try:
             ret = self._sendPostRequest(imcRequests['Player']['IsPlaying']).json()
-            logging.error(f"!!!!!!!!!!!!!!!!!!!!!!!!!: MenusOsd: playerIsPlayingRetVal = {ret}")
             if "result" in ret:
                 return ret['result'] == 'True'
             else:
@@ -393,7 +392,6 @@ class MenuOSD(StackLayout):
     def _playerIsPaused(self):
         try:
             ret = self._sendPostRequest(imcRequests['Player']['IsPaused']).json()
-            logging.error(f"!!!!!!!!!!!!!!!!!!!!!!!!!: MenusOsd: playerIsPaused RetVal = {ret}")
             if "result" in ret:
                 return ret['result'] == 'True'
             else:
@@ -406,8 +404,7 @@ class MenuOSD(StackLayout):
             srcPlay = "atlas://resources/img/pi-player/pause"
         else:
             srcPlay = "atlas://resources/img/pi-player/play"
-
-        logging.error(f"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!_ MenuOSD: getPlayPauseSource = {srcPlay}")
+            
         return srcPlay
 
     def changeSize(self, widget, value):
