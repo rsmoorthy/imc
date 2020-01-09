@@ -167,4 +167,8 @@ except:
 
 
 def writeDb():
-    writeJson(dbPath, db)
+    try:
+        writeJson(dbPath, db)
+    except:
+        logging.error("Inludes: not able to write database!!!")
+        pass

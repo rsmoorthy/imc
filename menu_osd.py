@@ -16,7 +16,7 @@ import time
 import os
 import logging
 from multiprocessing.connection import Client
-import pickle
+# import pickle
 import json
 
 from kivy.uix.stacklayout import StackLayout
@@ -87,8 +87,8 @@ def TestOsdRemoteIf():
     for i in range(15):
         osdc.right(None)
         time.sleep(0.5)
-        osdc.enter(None)
-        time.sleep(0.5)
+        # osdc.enter(None)
+        # time.sleep(0.5)
 
 
     for i in range(4):
@@ -102,6 +102,11 @@ def TestOsdRemoteIf():
     for i in range(11):
         osdc.left(None)
         time.sleep(0.5)
+
+
+    time.sleep(3)
+    logging.error("Mute.....")
+    osdc.mute()
 
 
 
@@ -197,9 +202,11 @@ class MenuOSD(StackLayout):
         self.totaltime.opacity = opac
 
     def _osdWindowFront(self):
+        logging.error("Thomas: _osdWindowFront")
         self.ipc.sendCmd({'cmd':'osdTop'},  includes.config['ipcWmPort'])
 
     def _osdWindowBack(self):
+        logging.error("Thomas: _osdWindowBack")
         self.ipc.sendCmd({'cmd':'osdBackground'}, includes.config['ipcWmPort'])
 
     def _osdguiManager(self):
@@ -211,7 +218,7 @@ class MenuOSD(StackLayout):
         '''
         lastTime = time.time()
         tValUpdate = time.time()
-        volTime = time.time()
+        volTime = 0 #time.time()
         volIsVisible = False
         state = "idle"
         lastState = "NONE"
@@ -230,21 +237,22 @@ class MenuOSD(StackLayout):
                     self._osdWindowBack()
                     x11Visible = False
 
-
-
             if time.time() - volTime < includes.config['settings']['osdTime']:
                 if not volIsVisible:
                     self.volume.opacity = 1.0
+                    self._osdWindowFront()
                     volIsVisible = True
             else:
                 if self.volumeTmp.value != 0:
                     if volIsVisible:
                         self.volume.opacity = 0.0
-                        self.volIsVisible = False
+                        volIsVisible = False
+                        self._osdWindowBack()
                 else:
                     if not volIsVisible:
                         volIsVisible = True
                         self.volume.opacity = 1.0
+                        self._osdWindowFront()
 
 
             if int(time.time() - tValUpdate) > 0.8 and isVisible:
@@ -264,6 +272,7 @@ class MenuOSD(StackLayout):
                         self.widgets[self.wId] .disable(None)
 
                     self._visible(0.0)
+                    self._osdWindowBack()
                     isVisible = False
                     continue
 
@@ -284,6 +293,7 @@ class MenuOSD(StackLayout):
                 if not isVisible:
                     isVisible = True
                     self._visible(1.0)
+                    self._osdWindowFront()
                     state = "visible"
                     self.wId = 0
                     self.widgets[0].enable(None)
@@ -300,6 +310,7 @@ class MenuOSD(StackLayout):
                         self.widgets[self.wId] .disable(None)
 
                     self._visible(0.0)
+                    self._osdWindowBack()
                     isVisible = False
 
 

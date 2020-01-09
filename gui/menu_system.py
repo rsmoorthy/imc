@@ -54,6 +54,7 @@ class MenuSystem(StackLayout):
                 except:
                     return -1
 
+        return -2
 
     def updateSystemValues(self):
         while True:
