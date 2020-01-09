@@ -291,13 +291,13 @@ class MenuOSD(StackLayout):
                 cmd = None
 
             if state == "idle" and cmd is not None:
-                if not isVisible:
-                    isVisible = True
-                    self._visible(1.0)
-                    self._osdWindowFront()
-                    state = "visible"
-                    self.wId = 0
-                    self.widgets[0].enable(None)
+                #if not isVisible:
+                isVisible = True
+                self._visible(1.0)
+                self._osdWindowFront()
+                state = "visible"
+                self.wId = 0
+                self.widgets[0].enable(None)
 
             elif state == "visible":
                 if cmd is not None:
@@ -378,7 +378,6 @@ class MenuOSD(StackLayout):
             pass
 
 
-
     def _playerIsPlaying(self):
         try:
             ret = self._sendPostRequest(imcRequests['Player']['IsPlaying']).json()
@@ -404,7 +403,7 @@ class MenuOSD(StackLayout):
             srcPlay = "atlas://resources/img/pi-player/pause"
         else:
             srcPlay = "atlas://resources/img/pi-player/play"
-            
+
         return srcPlay
 
     def changeSize(self, widget, value):
