@@ -1,5 +1,6 @@
 import os
 import sys
+import logging
 
 
 #Decorator for semaphore synchronization
@@ -105,11 +106,20 @@ def rotateInt(value, min, max):
 
     return value
 
+def getDisplaySize():
+    import Xlib
+    display = Xlib.display.Display()
+    root = display.screen().root
+    return (root.get_geometry().width, root.get_geometry().height)
+
+
 #Helper to create correct parameters for the mpv player
 #
 def mpvParams(start, path, config):
     tmp = []
     mpvParams = config['mpv']['parameters']
+
+    width = getDisplaySize()[0]
 
     for item in mpvParams:
 
@@ -122,8 +132,22 @@ def mpvParams(start, path, config):
         elif "{socket}" in item:
             sock = os.path.join(config['tmpdir'], 'socket')
             tmp.append(item.format(socket=sock))
+        elif "{width}" in item:
+            tmp.append(item.format(width=width))
 
         else:
             tmp.append(item)
 
     return tmp
+
+from functools import wraps
+from time import time
+def timing(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        start = time()
+        result = f(*args, **kwargs)
+        end = time()
+        logging.error('§§§§§§§§§§§§§§§§§§§§§§§§§§§§: Elapsed time: {}'.format(end-start))
+        return result
+    return wrapper

@@ -33,9 +33,10 @@ from control_tree import selectId as selectId
 from screensaver import ScreenSaver
 from json_handler import  _addJsonSystemcall
 from json_handler import  _systemCallbacks
+from helper import timing
 
 
-#Logger.setLevel(logging.DEBUG) #TODO: for debuging Pi App should be able to change this
+Logger.setLevel(logging.DEBUG) #TODO: for debuging Pi App should be able to change this
 
 # Create the differten tab view objects like power off, menu  and screen saver screens
 #
@@ -194,7 +195,6 @@ class MainMenu(ImcTabview):
                 self.screenSaver.resetTime()
                 self.keyDownSemaphore.release()
                 return 0
-
             self.screenSaver.resetTime()
 
         self._globalKeyHandler(keycode)
@@ -212,12 +212,24 @@ class MainMenu(ImcTabview):
     #
     def osdDisable(self, args):
         '''Switch control back to last element after OSD was displayed'''
-        self.curId = self.lastId
+        if self.lastId > 0:
+            self.curId = self.lastId
 
     def osdEnable(self, mode):
         '''Before switching to the OSD remember the current selected element'''
-        self.lastId = self.curId
+        if self.lastId < 0:
+            self.lastId = self.curId
         self.curId = selectId[mode]
+
+    def osdControl(self, mode):
+        if mode == 0:
+            self.lastId = self.curId
+        elif mode == 1:
+            self.curId = selectId['osd']
+        elif mode == 2:
+            self.curId = selectId['playerCore']
+        elif mode == 3:
+            self.curId = self.lastId
 
     @_addJsonSystemcall("_cmdMuteToggle")
     def _cmdMuteToggle(self, args):
@@ -258,8 +270,9 @@ class MainMenu(ImcTabview):
         )
         includes.playerCore.activateColorBar = includes.changeFooterColor
         includes.playerCore.screenSaverRun = self.screenSaver.swtich
-        includes.playerCore.osdEnable = self.osdEnable
-        includes.playerCore.osdDisable = self.osdDisable
+        # includes.playerCore.osdEnable = self.osdEnable
+        # includes.playerCore.osdDisable = self.osdDisable
+        includes.playerCore.osdControl = self.osdControl
         self.selectableWidgets[selectId['playerCore']] = includes.playerCore
 
 
@@ -363,6 +376,7 @@ class MainMenu(ImcTabview):
 
         #prepare system for execution....
         self.screenSaver.enable()
+        self.lastId = -1
 
 
         #Try to enable the start widget

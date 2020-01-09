@@ -115,7 +115,7 @@ class Player():
             return False
 
         if 'data' in ret:
-            return int(ret['data'])
+            return ret['data']
         else:
             return None
 
@@ -145,7 +145,6 @@ class Player():
         self.semaExec.acquire()
         data = json.dumps(command) + "\r\n"
         data = bytes(data, encoding='utf-8')
-
         try:
             if self.socket:
                 self.socket.send(data)
@@ -154,22 +153,28 @@ class Player():
                 if "error" not in str(buf):#we got event see read again... retry
                      buf = self.socket.recv(1024)
 
-                result = json.loads(buf.decode("utf-8"))
+                tmp = buf.decode("utf-8").split("\n")
 
-                if not 'error' in result:
-                    self.semaExec.release()
-                    return None
+                for line in tmp:
+                    result = json.loads(line)
 
-                status = result['error']
-                if status == 'success':
-                    self.semaExec.release()
-                    return result
+                    if not 'error' in result:
+                        continue
+
+                    status = result['error']
+                    if status == 'success':
+                        self.semaExec.release()
+                        return result
+
+                self.semaExec.release()
+                return None
 
             else:
                 self.semaExec.release()
                 return None
-        except:
-            logging.error("MpvPlayerV0: _execute: exception in socket communication")
+        except Exception as e:
+            logging.error(f"MpvPlayerV0: _execute: exception in socket communication = {e}")
+
             self.semaExec.release()
             return None
 

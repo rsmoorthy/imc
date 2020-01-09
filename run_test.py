@@ -1,6 +1,6 @@
 from gui.file_list import fileListTest
 import gui.playlist_viewer as plviewer
-#from gui.images import testImageBg
+from gui.selectable_items import testImageBg
 import sys
 
 

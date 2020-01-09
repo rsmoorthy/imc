@@ -11,7 +11,7 @@ from gui.labels import SelectLabel, SelectLabelBg
 from gui.buttons import SelectButton
 
 import includes
-from helper import rotateInt
+from helper import rotateInt, getDisplaySize
 
 class MenuSettings(GridLayout):
     widgets = []
@@ -180,8 +180,10 @@ class MenuSettings(GridLayout):
         def _changeHdmiResHD():
             os.system("DISPLAY=:0 xrandr -s 1920x1080")
 
+
         def _changeHdmiResVGA():
             os.system("DISPLAY=:0 xrandr -s 1280x1024")
+
 
 
         self.hdmiResolution = SelectSpinner(

@@ -279,6 +279,7 @@ class MenuOSD(StackLayout):
                 elif cmdVal == "mute" or cmdVal == "volumeup" or cmdVal == "volumedown":
                     _cmdHandler[cmdVal](self, state)
                     volTime = time.time()
+                    self._osdWindowFront()
                     continue
 
                 lastTime = time.time()
@@ -348,6 +349,7 @@ class MenuOSD(StackLayout):
 
     def onEnterStop(self, args):
         self._sendPostRequest(imcRequests['Player']['Stop'])
+        self._osdWindowBack()
 
     def onEnterTimeselect(self, args):
         try:
@@ -380,6 +382,7 @@ class MenuOSD(StackLayout):
     def _playerIsPlaying(self):
         try:
             ret = self._sendPostRequest(imcRequests['Player']['IsPlaying']).json()
+            logging.error(f"!!!!!!!!!!!!!!!!!!!!!!!!!: MenusOsd: playerIsPlayingRetVal = {ret}")
             if "result" in ret:
                 return ret['result'] == 'True'
             else:
@@ -390,6 +393,7 @@ class MenuOSD(StackLayout):
     def _playerIsPaused(self):
         try:
             ret = self._sendPostRequest(imcRequests['Player']['IsPaused']).json()
+            logging.error(f"!!!!!!!!!!!!!!!!!!!!!!!!!: MenusOsd: playerIsPaused RetVal = {ret}")
             if "result" in ret:
                 return ret['result'] == 'True'
             else:
@@ -403,6 +407,7 @@ class MenuOSD(StackLayout):
         else:
             srcPlay = "atlas://resources/img/pi-player/play"
 
+        logging.error(f"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!_ MenuOSD: getPlayPauseSource = {srcPlay}")
         return srcPlay
 
     def changeSize(self, widget, value):

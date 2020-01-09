@@ -106,7 +106,8 @@ defaultConf = {
     "mpv":{
         "parameters":[
             "mpv",
-            "--fs",
+            #"--fs",
+            "--geometry={width}",
             "--start=+{start}",
             "--no-border",
             "--no-input-default-bindings",

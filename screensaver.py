@@ -54,16 +54,22 @@ class ScreenSaver():
                     self.screenManager.current = self.blackScreenName
 
                 elif cmd['cmd'] == 'switch':
-                    if cmd['mode'] == 0:
+                    if cmd['mode'] == 0:#disable screen saver and show black screen
                         self.ena = False
                         self.idleCounter = 0
                         self.active = False
                         self.screenManager.current = self.blackScreenName
-                    else:
+                    elif cmd['mode'] == 1:#enable screen saver and show main menu
+                        logging.error("Thomas: Screensaver switch mode == 1")
                         self.ena = True
                         self.idleCounter = 0
                         self.active = False
-                        
+                        self.screenManager.current = self.menuName #TOOD: is this working =? This is needed for nomale operation but not for playlist playback...
+                    else:#activate screen saver and show black screen
+                        self.ena = True
+                        self.idleCounter = 0
+                        self.active = False
+                        self.screenManager.current = self.blackScreenName
 
     def start(self, args):
         self.ctrlQueue.put({'cmd':'start'})

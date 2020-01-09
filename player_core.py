@@ -124,8 +124,8 @@ class PlayerCore():
 
         while True:
             #read next entry of queue blocking style
-            time.sleep(0.25)
-            cnt = cnt + 0.25
+            time.sleep(0.01)
+            cnt = cnt + 0.01
 
             if cnt >= 1:
                 cnt = 0
@@ -151,15 +151,15 @@ class PlayerCore():
 
                 elif cmd['cmd'] == "stop":
                     play = False #stop plalist
-                    self.activateColorBar(0)
-                    self.screenSaverRun(0)
-                    self.player.stop()
                     enter = stop = next = previous = play = end = once = False
                     entry = None
                     entryId = 0
                     state = "idle"
                     play = False
-                    self.osdDisable(None)
+                    self.osdControl(3) #give control back to last main menu itemm
+                    self.activateColorBar(0)
+                    self.screenSaverRun(2)
+                    self.player.stop()
 
                 elif cmd['cmd'] == "previous":
                     previous = True
@@ -175,12 +175,14 @@ class PlayerCore():
                         self._writeDb()
 
                 elif cmd['cmd'] == "play":
+                    logging.error("------- core plaer: ---- play ")
                     if not play:
                         playlist = cmd['playlist']
                         check = checkPlaylist(playlist)
                         if check[1] == 0:
                             play = True
-                            self.osdEnable("osd")
+                            self.osdControl(0) #save current id
+                            self.osdControl(1) # switch controls to osd
                         else:
                             logging.error("PlayerCore: playlist format error = {}".format(check))
 
@@ -200,12 +202,13 @@ class PlayerCore():
             if state == "idle":
                 if play:
                     state = "pre"
+                    end = False
                     entry = playlist[str(entryId)]
                     logging.error("EntryId play: {} / {}".format(entryId, entry))
-                    self.osdDisable(None)
-                    self.osdEnable("playerCore")
+                    self.osdControl(2)# switch control to playerControl
 
             elif state == "pre":
+                end = False
                 if type(entry['pre']) == str and entry['pre'].lower() == "blackscreen":
                     self.activateColorBar(1)
                     self.screenSaverRun(0)
@@ -216,6 +219,7 @@ class PlayerCore():
                     state = "play"
 
             elif state == "preWait":
+                end = False
                 if enter:
                     enter = False
                     state = "play"
@@ -230,12 +234,12 @@ class PlayerCore():
                     state = "end"
 
             elif state == "play":
+                end = False
                 path = entry['path']
                 tSeek = entry['start']
                 self.player.start(path, tSeek)
                 state = "waitEnd"
-                self.osdDisable(None)
-                self.osdEnable("osd")
+                self.osdControl(1)# give control back to osd
 
             elif state == "waitEnd":
                 if end:
@@ -280,7 +284,7 @@ class PlayerCore():
 
             elif state == "end":
                 self.activateColorBar(0)
-                
+
                 entryId = entryId + 1
                 logging.debug("PLayerCore: entryId = {}".format(entry))
                 if entryId >= len(playlist):
@@ -290,16 +294,19 @@ class PlayerCore():
                         enter = stop = next = previous = play = end = once = False
                         entry = None
                         entryId = 0
-                        self.osdDisable(None)
+                        self.osdControl(3) #give control back to last main menu itemm
 
                 state = "idle"
                 end = False
 
-    def osdDisable(self, args):
-        logging.warning("PlayerCore: osdDisable method has not been assigned!!!!")
+    # def osdDisable(self, args):
+    #     logging.warning("PlayerCore: osdDisable method has not been assigned!!!!")
+    #
+    # def osdEnable(self, args):
+    #     logging.warning("PlayerCore: osdEnable method has not been assigned!!!!")
+    def osdControl(self, mode):
+        logging.warning("PlayerCore: osdControl method has not been assigned!!!!")
 
-    def osdEnable(self, args):
-        logging.warning("PlayerCore: osdEnable method has not been assigned!!!!")
 
     def __init__(self, **kwargs):
         self._runtimeInterval = kwargs.pop('runtimeInterval', 1)
@@ -321,6 +328,7 @@ class PlayerCore():
 
 if __name__ == "__main__":
     import time
+    from helper import createPlayListEntry
 
     def screenSaver(mode):
         print("screensaver: mode = " + str(mode))
@@ -337,7 +345,7 @@ if __name__ == "__main__":
     core.screenSaverRun = screenSaver
     #core.player.start = playerstartdummy
 
-    testEnable = (0,0,0,0,0,0,1)
+    testEnable = (1,0,0,0,0,0,0)
 
     def waitPlayer():
         while not core.isPlaying():
