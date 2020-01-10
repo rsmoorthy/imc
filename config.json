@@ -1,4 +1,16 @@
 {
+    "amixer": {
+        "get": [
+            "amixer",
+            "sget",
+            "Master"
+        ],
+        "set": [
+            "amixer",
+            "sget",
+            "Master"
+        ]
+    },
     "hdmiCfgPath": "/tmp/imc_hdmi.txt",
     "httpServerIp": {
         "ip": "127.0.0.1",
@@ -9,7 +21,7 @@
     "mpv": {
         "parameters": [
             "mpv",
-            "--fs",
+            "--geometry={width}",
             "--start=+{start}",
             "--no-border",
             "--no-input-default-bindings",
@@ -29,11 +41,35 @@
         "rootdir": "/mnt/Ishamedia",
         "types": "imc,json"
     },
+    "scancodes": {
+        "1": "esc",
+        "14": "back",
+        "25": "power",
+        "27": "volumeup",
+        "28": "enter",
+        "35": "home",
+        "50": "mute",
+        "53": "volumedown",
+        "88": "home",
+        "103": "up",
+        "104": "pgup",
+        "105": "left",
+        "106": "right",
+        "108": "down",
+        "109": "pgdown",
+        "113": "mute",
+        "114": "volumedown",
+        "115": "volumeup",
+        "116": "power",
+        "158": "back",
+        "172": "home",
+        "272": "enter"
+    },
     "settings": {
         "audioSource": 0,
         "hdmiBoost": 4,
         "hdmiResolution": 0,
-        "osdTime": 5,
+        "osdTime": 9,
         "runtimeInterval": 1,
         "screensaverTime": 5,
         "volIncVal": 5

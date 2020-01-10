@@ -96,7 +96,7 @@ class IshaWm():
                         x=0,
                         y=0
                     )
-                    self.display.sync()
+                    self.display.flush()
             except:
                 logging.warning("X11WindowManager: some error occured in window mapping...")
 
@@ -105,20 +105,19 @@ class IshaWm():
     def osdTop(self):
         window = self.windows['menu_osd']
         window.configure(stack_mode=Xlib.X.TopIf)
-        self.display.sync()
+        self.display.flush()
 
 
     def osdBackground(self):
         window = self.windows['menu_osd']
         window.configure(stack_mode=Xlib.X.BottomIf)
-        self.display.sync()
+        self.display.flush()
 
 
 
     def server(self):
         cmdServer = Ipc()
         cmdServer.serverInit(includes.config['ipcWmPort'])
-
         while True:
             data = cmdServer.serverGetCmd()
             if 'cmd' in data:
@@ -133,8 +132,8 @@ class IshaWm():
                         self.osdBackground()
 
 
-    def main(self):
 
+    def main(self):
         self.thread = threading.Thread(target=self.server)
         self.thread.setDaemon(True)
         self.thread.start()

@@ -3,6 +3,7 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.app import App
 from kivy.core.window import Window
 import logging
+import os
 
 from gui.labels import SelectLabel
 from gui.buttons import SelectButton
@@ -25,12 +26,12 @@ class MenuShutdown(AnchorLayout):
         self.widgets[self.wId].onEnter()
 
     def _shutdown(self):
-        logging.error("_shutdown not implemented!")
-        pass
+        os.system("sudo poweroff")
+        
 
     def _reboot(self):
-        logging.error("_shutdown not implemented!")
-        pass
+        os.system("sudo reboot")
+
 
     def _cancel(self):
         logging.error("cancel called | lastId =  {}".format(self.lastId))

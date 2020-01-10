@@ -119,10 +119,46 @@ defaultConf = {
             "--input-ipc-server={socket}"
         ]
     },
+    "amixer":{
+        "get":[
+            "amixer",
+            "sget",
+            "Master",
+        ],
+        "set":[
+            "amixer",
+            "sget",
+            "Master",
+        ]
+    },
     "ipcOsdPort":40001,
     "ipcWmPort":40002,
     "hdmiCfgPath":"/tmp/imc_hdmi.txt", #TODO needs to point to boot dir of pi
+    "scancodes":{
+        1:"esc",
+		14:"back",
+		25:"power", #TODO: right now its P key for testing
+		27:"volumeup", #+ key
+		28:"enter",
+		35:"home",
+		50:"mute", #m key
+		53:"volumedown", # - key
+		88:"home",
+		103:"up",
+		104:"pgup",
+		105:"left",
+		106:"right",
+		108:"down",
+		109:"pgdown",
+		113:"mute",
+		114:"volumedown",
+		115:"volumeup",
+        116:"power", #remote powerbutton
+		158:"back", #browser back
+		172:"home", #home key
+        272:"enter",#left mouse click
 
+    }
 }
 
 syspath = os.path.dirname(os.path.realpath(__file__))

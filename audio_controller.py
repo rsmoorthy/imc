@@ -2,16 +2,19 @@ import time
 import includes
 import os
 import logging
+import subprocess
 
 from helper import clipInt
 
 class AudioController():
     def _setVolume(self, value):
-        os.system("amixer sset Master {}% > /dev/null".format(int(value)))
+        tmp = includes.config["amixer"]["set"]
+        tmp.append(f"{int(value)}% > /dev/null")
+        subprocess.Popen(tmp, stdout=subprocess.PIPE)
 
     def _getVolume(self):
-        import subprocess
-        p = subprocess.Popen(["amixer", "sget", "Master"], stdout=subprocess.PIPE)
+
+        p = subprocess.Popen(includes.config["amixer"]["get"], stdout=subprocess.PIPE)
         out = str(p.stdout.read())
 
         out = out.split("\\n")

@@ -251,7 +251,7 @@ class MenuSettings(GridLayout):
             text="OSD Time"
         )
 
-        for i in range(1, self.stimeEnd):
+        for i in range(self.stimeStart, self.stimeEnd):
             self.osdTime.add(str(i), _updateOsdTime)
 
         self.widgets.append(self.osdTime)

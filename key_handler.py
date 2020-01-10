@@ -8,6 +8,7 @@ from selectors import DefaultSelector, EVENT_READ
 import traceback
 
 from ipc import Ipc
+import includes
 
 class KeyHandler():
 	keyboards = []
@@ -19,7 +20,9 @@ class KeyHandler():
 		'KEY_LEFT',
 		'KEY_RIGHT',
 		'KEY_UP',
-		'KEY_DOWN'
+		'KEY_DOWN',
+		'BTN_RIGHT',
+		'KEY_POWER'
 	]
 
 	def onPress(self, args):
@@ -30,26 +33,27 @@ class KeyHandler():
 
 	def _setScancodes(self):
 		self.scancodes = {}
-		self.scancodes[1] = "esc"
-		self.scancodes[14] = "back"
-		self.scancodes[25] = "power" #TODO: right now its P key for testing
-		self.scancodes[27] = "+"
-		self.scancodes[28] = "enter"
-		self.scancodes[35] = "home"
-		self.scancodes[50] = "m"
-		self.scancodes[53] = "-"
-		self.scancodes[88] = "home"
-		self.scancodes[103] = "up"
-		self.scancodes[104] = "pgup"
-		self.scancodes[105] = "left"
-		self.scancodes[106] = "right"
-		self.scancodes[108] = "down"
-		self.scancodes[109] = "pgdown"
-		self.scancodes[113] = "mute"
-		self.scancodes[114] = "volumedown"
-		self.scancodes[115] = "volumeup"
-		self.scancodes[158] = "back" #browser back
-		self.scancodes[172] = "home" #home key
+		self.scancodes.update(includes.config['scancodes'])
+		# self.scancodes[1] = "esc"
+		# self.scancodes[14] = "back"
+		# self.scancodes[25] = "power" #TODO: right now its P key for testing
+		# self.scancodes[27] = "+"
+		# self.scancodes[28] = "enter"
+		# self.scancodes[35] = "home"
+		# self.scancodes[50] = "m"
+		# self.scancodes[53] = "-"
+		# self.scancodes[88] = "home"
+		# self.scancodes[103] = "up"
+		# self.scancodes[104] = "pgup"
+		# self.scancodes[105] = "left"
+		# self.scancodes[106] = "right"
+		# self.scancodes[108] = "down"
+		# self.scancodes[109] = "pgdown"
+		# self.scancodes[113] = "mute"
+		# self.scancodes[114] = "volumedown"
+		# self.scancodes[115] = "volumeup"
+		# self.scancodes[158] = "back" #browser back
+		# self.scancodes[172] = "home" #home key
 
 
 	def _worker(self):
@@ -60,8 +64,8 @@ class KeyHandler():
 				for event in device.read():
 					if event.type == 1:
 						if event.value == 0:#key released
-							self.onRelease((evdev.ecodes.KEY[event.code], event.code))
-
+							pass
+							#self.onRelease((evdev.ecodes.KEY[event.code], event.code))
 						#elif event.value == 0:#key pressed
 						else:
 							try:

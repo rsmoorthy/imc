@@ -46,7 +46,7 @@ class MenuSystem(StackLayout):
                     with open(os.path.join(path, "type"), "r") as f:
                         tmp = f.readlines()
                         for line in tmp:
-                            if "x86_pkg_temp" in line:
+                            if "x86_pkg_temp" in line or "cpu-thermal" in line:
                                 with open(os.path.join(path, "temp"), "r") as f:
                                     tmp = f.readline()
 

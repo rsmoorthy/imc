@@ -162,15 +162,15 @@ class MainMenu(ImcTabview):
 
             return
 
-        if keycode[1] == "+":
+        if keycode[1] == "volumeup":
             self.audioController.volumeUp()
             return
 
-        if keycode[1] == "-":
+        if keycode[1] == "volumedown":
             self.audioController.volumeDown()
             return
 
-        if keycode[1] == "m":
+        if keycode[1] == "mute":
             self.audioController.mute()
             return
 
@@ -353,6 +353,8 @@ class MainMenu(ImcTabview):
         vol = self.audioController.getVolume()
 
         _systemCallbacks['getVolume'] = self.audioController._getVolume
+        _systemCallbacks['setVolume'] = self.audioController.setVolume
+
         self.volumeIndicator.value = vol
 
         #Setup the selectable widget object for key handling

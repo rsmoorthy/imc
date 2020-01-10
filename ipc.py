@@ -6,11 +6,8 @@ import logging
 from threading import Semaphore
 
 class Ipc():
-    cmdSemaphore = Semaphore()
-
     def sendCmd(self, cmd, port):
         self.cmdSemaphore.acquire()
-
         address = ('localhost', port)
 
         try:
@@ -36,6 +33,8 @@ class Ipc():
         data = json.loads(msg)
         return data
 
+    def __init__(self):
+        self.cmdSemaphore = Semaphore()
 
 if __name__ == "__main__":
     ipc = Ipc()

@@ -361,9 +361,9 @@ CONTROL_TREE = {
     selectId['osd']:{
         "left": [{'func':'left', 'id':selectId['osd']}],
         "right":[{'func':'right', 'id':selectId['osd']}],
-        "+":[{'func':'volumeUp', 'id':selectId['osd']}],
-        "-":[{'func':'volumeDown', 'id':selectId['osd']}],
-        "m":[{'func':'mute', 'id':selectId['osd']}],
+        "volumeup":[{'func':'volumeUp', 'id':selectId['osd']}],
+        "volumedown":[{'func':'volumeDown', 'id':selectId['osd']}],
+        "mute":[{'func':'mute', 'id':selectId['osd']}],
         "home":[{'func':'disable', 'id':selectId['osd']}],
         "enter":[{'func':'enter', 'id':selectId['osd']}],
         "esc":[{'func':'disable', 'id':selectId['osd']}],

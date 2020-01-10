@@ -308,7 +308,7 @@ class MenuOSD(StackLayout):
                     if self.widgets[self.wId] == self.runtime:
                         self.runtime.clear(None)
                     else:
-                        self.widgets[self.wId] .disable(None)
+                        self.widgets[self.wId].disable(None)
 
                     self._visible(0.0)
                     self._osdWindowBack()

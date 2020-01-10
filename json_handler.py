@@ -136,7 +136,7 @@ def _applicationSetVolume(jsonId, params):
 
     try:
         vol = params['volume']
-        subprocess.run(['amixer', 'sset', '\'Master\'', str(vol), '% > /dev/null'])
+        _systemCallbacks['setVolume'](None, vol)
         resp = {}
         resp['id'] = jsonId
         resp['jsonrpc'] = "2.0"
