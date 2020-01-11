@@ -130,13 +130,13 @@ def _filesGetDirectory(jsonId, params):
 @_jsonHandlerCheck
 def _applicationSetVolume(jsonId, params):
     if params is None:
-        msg = "params not specified"
+        msg = "params not specified"_systemCallbacks
         resp = _jsonErrResponse(jsonId, ERR_MISSING_PARAMS, msg)
         return resp
 
     try:
         vol = params['volume']
-        _systemCallbacks['setVolume'](None, vol)
+        _systemCallbacks['setVolume'](vol)
         resp = {}
         resp['id'] = jsonId
         resp['jsonrpc'] = "2.0"
