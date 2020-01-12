@@ -376,7 +376,7 @@ CONTROL_TREE = {
         "playpause":[{'func':'playPause', 'id':selectId['osd']}],
     },
     #
-    # Player Core instance, only used for processing of playlist 
+    # Player Core instance, only used for processing of playlist
     #
     selectId['playerCore']:{
         "enter": [{'func':'keyEnter', 'id':selectId['playerCore']}],

@@ -175,9 +175,10 @@ class MainMenu(ImcTabview):
             return
 
         if keycode[1] == "power":
-            if self.root.current != "shutdown":
-                self._powerOffShowMenu()
-            return
+            if not includes.playerCore.isPlaying():
+                if self.root.current != "shutdown":
+                    self._powerOffShowMenu()
+                return
 
 
     # Callback function triggered by the key handler. This is triggered when

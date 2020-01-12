@@ -288,13 +288,13 @@ class PlayerCore():
                 entryId = entryId + 1
                 logging.debug("PLayerCore: entryId = {}".format(entry))
                 if entryId >= len(playlist):
-                        play = False #stop plalist
+                    play = False #stop plalist
 
-                        self.screenSaverRun(1) #Stay on screen saver
-                        enter = stop = next = previous = play = end = once = False
-                        entry = None
-                        entryId = 0
-                        self.osdControl(3) #give control back to last main menu itemm
+                    self.screenSaverRun(2) #Stay on screen saver
+                    enter = stop = next = previous = play = end = once = False
+                    entry = None
+                    entryId = 0
+                    self.osdControl(3) #give control back to last main menu itemm
 
                 state = "idle"
                 end = False

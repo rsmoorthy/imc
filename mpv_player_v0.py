@@ -218,5 +218,5 @@ class Player():
             self.process.kill()
 
         #wait for process to finish
-        while self.process.poll() == None:
+        while self.process is not None and self.process.poll() is None:
             time.sleep(0.25)
