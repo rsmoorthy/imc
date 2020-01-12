@@ -265,6 +265,10 @@ class PlaylistMenu(GridLayout):
         self.playlistMediaFilesContent.widgets = []
 
         for item in self.playlistData:
+            if not os.path.isabs(self.playlistData[item]['path']):
+                tmpPath = os.path.join(os.path.dirname(path), self.playlistData[item]['path'])
+                self.playlistData[item]['path'] = tmpPath
+
             self.playlistMediaFilesContent.add(self.playlistData[item]['name'], False)
 
         return True

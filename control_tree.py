@@ -376,9 +376,10 @@ CONTROL_TREE = {
         "playpause":[{'func':'playPause', 'id':selectId['osd']}],
     },
     #
-    # Player Core instance
+    # Player Core instance, only used for processing of playlist 
     #
     selectId['playerCore']:{
         "enter": [{'func':'keyEnter', 'id':selectId['playerCore']}],
+        "back": [{'func':'stop', 'id':selectId['playerCore']}],
     }
 }
