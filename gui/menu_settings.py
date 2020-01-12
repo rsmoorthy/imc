@@ -79,13 +79,14 @@ class MenuSettings(GridLayout):
         includes.writeConfig()
 
         #Read /boot/imc_hdmi.txt
-        creaetEmptyFile(includes.config['hdmiCfgPath'])
+        fName = os.path.join(includes.config['tmpdir'], "imc_hdmi.txt")
+        creaetEmptyFile(fName)
         try:
             data = []
-            with open(includes.config['hdmiCfgPath'], "r") as hdmiCfg:
+            with open(fName, "r") as hdmiCfg:
                 data = hdmiCfg.readlines()
 
-            with open(includes.config['hdmiCfgPath'], "w") as hdmiCfg:
+            with open(fName, "w") as hdmiCfg:
                 ret = []
                 if len(data) > 0:
                     for line in data:
@@ -97,6 +98,7 @@ class MenuSettings(GridLayout):
                     ret.append("config_hdmi_boost={}".format(self.hdmiBoost.getCurrent()))
 
                 hdmiCfg.writelines(ret)
+                os.system(f"sudo cp {fName} {includes.config['hdmiCfgPath']}")
         except:
                 logging.error("{}".format(sys.exc_info()))
 
@@ -152,10 +154,10 @@ class MenuSettings(GridLayout):
         # HDMI Audio / Analog audio selector
         #
         def _setAudioOutAnalog():
-            os.system("amixer cset numid=3 2")
+            os.system("amixer cset numid=3 1")
 
         def _setAudioOutHdmi():
-            os.system("amixer cset numid=3 1")
+            os.system("amixer cset numid=3 2")
 
         def _setAudioOutAuto():
             os.system("amixer cset numid=3 0")

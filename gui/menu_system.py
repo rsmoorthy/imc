@@ -2,6 +2,7 @@ import logging
 import os
 import time
 import threading
+import psutil
 
 from time import strftime, gmtime
 from kivy.uix.stacklayout import StackLayout
@@ -18,6 +19,10 @@ class MenuSystem(StackLayout):
             return True
 
         return False
+
+    def clearValues(self):
+        self.lmin, self.lcur, self.lmax = (0, 0, 0)
+        self.tmin, self.tcur, self.tmax = (0, 0, 0)
 
     def getIpAddress(self):
         import socket
@@ -68,10 +73,20 @@ class MenuSystem(StackLayout):
             if temp > self.tmax:
                 self.tmax = temp
 
-            self.tcur = temp
-            self.cpuTemp.text = "CPU:  [color=#0f85a5]{}°C[/color] | [color=#575757]{}°C[/color] | [color=#F15B28]{}°C[/color]".format(self.tmin, self.tcur, self.tmax)
 
-            self.ipAddress.text="IP WiFi:  [color=#0f85a5]{}[/color]".format(self.getIpAddress())
+            load = psutil.cpu_percent(0)
+            if load < self.lmin:
+                self.lmin = load
+
+            if load > self.lmax:
+                self.lmax = load
+
+            self.tcur = temp
+            self.cpuTemp.text = "CPU[°C]:  [color=#0f85a5]{}°C[/color] | [color=#575757]{}°C[/color] | [color=#F15B28]{}°C[/color]".format(self.tmin, self.tcur, self.tmax)
+
+            self.ipAddress.text = "IP WiFi:  [color=#0f85a5]{}[/color]".format(self.getIpAddress())
+
+            self.cpuLoad.text = "CPU[%]:  [color=#0f85a5]{}°%[/color] | [color=#575757]{}°%[/color] | [color=#F15B28]{}°%[/color]".format(self.lmin, load, self.lmax)
 
 
     def _autoReplay(self, id):
@@ -81,13 +96,13 @@ class MenuSystem(StackLayout):
         except:
             logging.error("MenuSystem: could not start playback for auto restart")
 
-
-    def _reboot(self, args):
-        logging.error("TODO: reboot the system")
-        #TODO: os.system("/sbin/reboot")
-
-    def _shutdown(self, args):
-        self.mainMenu._powerOffShowMenu()
+    #
+    # def _reboot(self, args):
+    #     logging.error("TODO: reboot the system")
+    #     #TODO: os.system("/sbin/reboot")
+    #
+    # def _shutdown(self, args):
+    #     self.mainMenu._powerOffShowMenu()
 
     def closeCrashMessage(self, args):
         if self.systemCrashHandl:
@@ -106,24 +121,36 @@ class MenuSystem(StackLayout):
 
         self.headerMenu = GridLayout(
             rows = 1,
-            spacing=[20],
+            #spacing=[40],
             size_hint_y=None,
             height=50
         )
+
+        self.gap0 = Label(
+            size_hint_x=None,
+            width=20
+        )
+        self.headerMenu.add_widget(self.gap0)
 
         temp = self.getCpuTemp()
         self.tmin = temp
         self.tmax = temp
         self.tcur = temp
         self.cpuTemp = Label(
-            text="CPU:  [color=#0f85a5]{}°C[/color] | [color=#575757]{}°C[/color] | [color=#F15B28]{}°C[/color]".format(self.tmin, self.tcur, self.tmax),
+            text="CPU[°C]:  [color=#0f85a5]{}°C[/color] | [color=#575757]{}°C[/color] | [color=#F15B28]{}°C[/color]".format(self.tmin, self.tcur, self.tmax),
             size_hint=(None,None),
-            width=300,
+            width=400,
             height=37.5,
             markup=True,
             font_size=self.fontSize,
         )
         self.headerMenu.add_widget(self.cpuTemp)
+
+        self.gap1 = Label(
+            size_hint_x=None,
+            width=100
+        )
+        self.headerMenu.add_widget(self.gap1)
 
         self.ipAddress = Label(
             text="IP WiFi:  [color=#0f85a5]{}[/color]".format(self.getIpAddress()),
@@ -135,6 +162,26 @@ class MenuSystem(StackLayout):
         )
         self.headerMenu.add_widget(self.ipAddress)
         self.add_widget(self.headerMenu)
+
+        self.gap2 = Label(
+            size_hint_x=None,
+            width=100
+        )
+        self.headerMenu.add_widget(self.gap2)
+
+        temp = psutil.cpu_percent(0)
+        self.lmin = temp
+        self.lmax = temp
+        self.lcur = temp
+        self.cpuLoad = Label(
+            text="CPU[%]:  [color=#0f85a5]{}%[/color] | [color=#575757]{}%[/color] | [color=#F15B28]{}%[/color]".format(self.lmin, self.lcur, self.lmax),
+            size_hint=(None,None),
+            width=300,
+            height=37.5,
+            markup=True,
+            font_size=self.fontSize,
+        )
+        self.headerMenu.add_widget(self.cpuLoad)
 
         self.handler = DialogHandler()
 

@@ -249,6 +249,9 @@ class MainMenu(ImcTabview):
         finally:
             self.httpd.server_close()
 
+    def clearValues(self, args):
+        self.menuSystem.clearValues()
+
     def __init__(self, **kwargs):
         self.selectableWidgets = {}
         self.keyDownSemaphore = threading.Semaphore()
@@ -370,6 +373,9 @@ class MainMenu(ImcTabview):
         self.selectableWidgets[selectId['pFiles']] = self.menuPlaylist
         self.selectableWidgets[selectId['osd']] = OsdController()
         self.selectableWidgets[selectId['audioCtrl']] = self.audioController
+
+        includes.playerCore.addEndHandler(self.selectableWidgets[selectId['osd']].videoEnd)
+
 
         #Setup the server
         self.serverThread = threading.Thread(target=self._server)

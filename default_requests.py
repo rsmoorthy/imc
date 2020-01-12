@@ -41,6 +41,16 @@ imcRequests = {
             "method": "Player.Stop",
             "id": 1
         },
+        "Next":{
+            "jsonrpc": "2.0",
+            "method": "Player.Next",
+            "id": 1
+        },
+        "Previous":{
+            "jsonrpc": "2.0",
+            "method": "Player.Previous",
+            "id": 1
+        },
         "Seek":{
             "jsonrpc": "2.0",
             "method": "Player.Seek",

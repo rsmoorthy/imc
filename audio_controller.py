@@ -8,9 +8,9 @@ from helper import clipInt
 
 class AudioController():
     def _setVolume(self, value):
-        tmp = includes.config["amixer"]["set"]
-        tmp.append(f"{int(value)}% > /dev/null")
-        subprocess.Popen(tmp, stdout=subprocess.PIPE)
+        tmp = includes.config["amixer"]["set"] + [f"{int(value)}%"]
+        p = subprocess.Popen(tmp, stdout=subprocess.PIPE)
+        out = str(p.stdout.read())
 
     def _getVolume(self):
 

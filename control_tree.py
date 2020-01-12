@@ -53,6 +53,9 @@ selectId = {
 
 CONTROL_TREE = {
     selectId['system']:{
+        "back": [
+            {'func':'clearValues', 'id':selectId['root']}
+        ],
         "down": [
             {'func':'enable', 'id':selectId['root'], 'args':selectId['videos']},
             {'func':'disable', 'id':selectId['root'], 'args':selectId['system']},
@@ -370,6 +373,7 @@ CONTROL_TREE = {
         "back":[{'func':'disable', 'id':selectId['osd']}],
         "up":[{'func':'up', 'id':selectId['osd']}],
         "down":[{'func':'down', 'id':selectId['osd']}],
+        "playpause":[{'func':'playPause', 'id':selectId['osd']}],
     },
     #
     # Player Core instance

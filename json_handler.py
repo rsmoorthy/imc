@@ -129,24 +129,14 @@ def _filesGetDirectory(jsonId, params):
 @_addHandler("Application.SetVolume")
 @_jsonHandlerCheck
 def _applicationSetVolume(jsonId, params):
-    if params is None:
-        msg = "params not specified"
-        resp = _jsonErrResponse(jsonId, ERR_MISSING_PARAMS, msg)
-        return resp
+    vol = params['volume']
+    _systemCallbacks['setVolume'](vol)
+    resp = {}
+    resp['id'] = jsonId
+    resp['jsonrpc'] = "2.0"
+    resp['result'] = vol
+    return resp
 
-    try:
-        vol = params['volume']
-        _systemCallbacks['setVolume'](vol)
-        resp = {}
-        resp['id'] = jsonId
-        resp['jsonrpc'] = "2.0"
-        resp['result'] = vol
-        return resp
-
-    except KeyError as e:
-        msg = "key not correct [{}]".format(e)
-        resp = _jsonErrResponse(jsonId, ERR_KEY, msg)
-        return resp
 
 
 @_addHandler("Application.GetProperties")
@@ -345,9 +335,19 @@ def _playerIsPlaying(jsonId, params):
     resp['result'] = str(includes.playerCore.isPaused())
     return resp
 
-@_addHandler("Player.IsPaused")
-def _playerIsPlaying(jsonId, params):
+@_addHandler("Player.Next")
+def _playerNext(jsonId, params):
     resp = {}
+    includes.playerCore.keyNext(None)
+    resp['id'] = jsonId
+    resp['jsonrpc'] = "2.0"
+    resp['result'] = str(includes.playerCore.isPaused())
+    return resp
+
+@_addHandler("Player.Previous")
+def _playerNext(jsonId, params):
+    resp = {}
+    includes.playerCore.keyPrevious(None)
     resp['id'] = jsonId
     resp['jsonrpc'] = "2.0"
     resp['result'] = str(includes.playerCore.isPaused())

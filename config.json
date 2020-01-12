@@ -1,23 +1,32 @@
 {
-    "amixer": {
-        "get": [
-            "amixer",
-            "sget",
-            "Master"
-        ],
-        "set": [
-            "amixer",
-            "sget",
-            "Master"
-        ]
+    "tmpdir": "/tmp",
+    "music": {
+        "rootdir": "/mnt/Ishamedia",
+        "types": "mp3,wav",
+        "autoplay": "false"
     },
-    "hdmiCfgPath": "/tmp/imc_hdmi.txt",
+    "playlist": {
+        "rootdir": "/mnt/Ishamedia",
+        "types": "imc,json"
+    },
+    "video": {
+        "rootdir": "/mnt/Ishamedia",
+        "types": "mp4",
+        "autoplay": "false"
+    },
+    "settings": {
+        "osdTime": 5,
+        "runtimeInterval": 1,
+        "screensaverTime": 5,
+        "hdmiBoost": 4,
+        "audioSource": 0,
+        "hdmiResolution": 0,
+        "volIncVal": 5
+    },
     "httpServerIp": {
         "ip": "127.0.0.1",
         "port": "11111"
     },
-    "ipcOsdPort": 40001,
-    "ipcWmPort": 40002,
     "mpv": {
         "parameters": [
             "mpv",
@@ -29,19 +38,49 @@
             "--really-quiet",
             "--no-osc",
             "--no-input-terminal",
-            "--input-ipc-server={socket}"
+            "--input-ipc-server={socket}",
+            "--gpu-context=x11"
         ]
     },
-    "music": {
-        "autoplay": "false",
-        "rootdir": "/mnt/Ishamedia",
-        "types": "mp3,wav"
+    "amixer": {
+        "get": [
+            "amixer",
+            "sget",
+            "PCM"
+        ],
+        "set": [
+            "amixer",
+            "sset",
+            "PCM"
+        ]
     },
-    "playlist": {
-        "rootdir": "/mnt/Ishamedia",
-        "types": "imc,json"
-    },
+    "ipcOsdPort": 40001,
+    "ipcWmPort": 40002,
+    "hdmiCfgPath": "/boot/imc_hdmi.txt",
     "scancodes": {
+        "1": "esc",
+        "14": "back",
+        "25": "power",
+        "27": "volumeup",
+        "28": "enter",
+        "35": "home",
+        "50": "mute",
+        "53": "volumedown",
+        "88": "home",
+        "103": "up",
+        "104": "pgup",
+        "105": "left",
+        "106": "right",
+        "108": "down",
+        "109": "pgdown",
+        "113": "mute",
+        "114": "volumedown",
+        "115": "volumeup",
+        "116": "power",
+        "158": "back",
+        "164": "playpause",
+        "172": "home",
+        "272": "enter",
         "1": "esc",
         "14": "back",
         "25": "power",
@@ -64,20 +103,5 @@
         "158": "back",
         "172": "home",
         "272": "enter"
-    },
-    "settings": {
-        "audioSource": 0,
-        "hdmiBoost": 4,
-        "hdmiResolution": 0,
-        "osdTime": 9,
-        "runtimeInterval": 1,
-        "screensaverTime": 5,
-        "volIncVal": 5
-    },
-    "tmpdir": "/tmp",
-    "video": {
-        "autoplay": "false",
-        "rootdir": "/mnt/Ishamedia",
-        "types": "mp4"
     }
 }

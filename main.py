@@ -1,3 +1,4 @@
+#!/home/pi/.local/share/virtualenvs/imc-zc-BRSxn/bin/python
 import Xlib
 import Xlib.display
 import logging
@@ -32,6 +33,7 @@ class IshaWm():
         self.root.change_attributes(event_mask = Xlib.X.SubstructureRedirectMask)
         self.handleActive = False
         self.mainGuiMapped = False
+        self.osdWin = None
         self.state = 0
 
     first = True
@@ -62,7 +64,7 @@ class IshaWm():
                 xClass = event.window.get_wm_class()
 
                 #Make main gui full screen
-                if 'main_gui' in xClass[0]:
+                if not self.mainGuiMapped or 'main_gui' in xClass[0]:
                     event.window.map()
                     event.window.configure(
                         width=self.displayWidth,
@@ -72,9 +74,9 @@ class IshaWm():
                     )
                     self.mainGuiMapped = True
                     self.state = 1
-                    self.windows[xClass[0]] = event.window
+                    self.windows['main_gui'] = event.window
 
-                elif 'menu_osd' in xClass[0]:
+                elif (self.mainGuiMapped or 'menu_osd' in xClass[0]) and self.osdWin is None:
                     osdHeight = 55
                     event.window.map()
                     event.window.configure(
@@ -84,7 +86,7 @@ class IshaWm():
                         y=self.displayHeight-osdHeight
                     )
                     self.osdWin = event.window
-                    self.windows[xClass[0]] = event.window
+                    self.windows['menu_osd'] = event.window
                     self.osdBackground()
 
                 else:

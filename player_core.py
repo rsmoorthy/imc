@@ -307,6 +307,8 @@ class PlayerCore():
     def osdControl(self, mode):
         logging.warning("PlayerCore: osdControl method has not been assigned!!!!")
 
+    def addEndHandler(self, handler):
+        self.player.addEndHandler(handler)
 
     def __init__(self, **kwargs):
         self._runtimeInterval = kwargs.pop('runtimeInterval', 1)

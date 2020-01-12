@@ -67,6 +67,13 @@ class OsdController():
     def disable(self, args):
         self.ipc.sendCmd({'cmd':{'func':'reset'}}, includes.config['ipcOsdPort'])
 
+    def playPause(self, args):
+        self.ipc.sendCmd({'cmd':{'func':'playPause'}}, includes.config['ipcOsdPort'])
+
+    def videoEnd(self, args):
+        self.ipc.sendCmd({'cmd':{'func':'videoend'}}, includes.config['ipcOsdPort'])
+
+
     def __init__(self):
         self.ipc = Ipc()
 
@@ -167,6 +174,7 @@ class MenuOSD(StackLayout):
     def up(self, args):
         if self.widgets[self.wId] == self.runtime:
             self.runtime.up(None)
+
 
     @_addHandler("down")
     def down(self, args):
@@ -282,6 +290,17 @@ class MenuOSD(StackLayout):
                     self._osdWindowFront()
                     continue
 
+                elif cmdVal == "videoend":
+                    self._osdWindowBack()
+                    state = "idle"
+                    cmd = None
+                    self._visible(0.0)
+                    isVisible = False
+                    continue
+                elif cmdVal == "playPause":
+                    self.onEnterPlayPause(None)
+                    continue
+
                 lastTime = time.time()
 
                 #Update the symbol of player button alternate play pause symbol
@@ -341,14 +360,17 @@ class MenuOSD(StackLayout):
 
     def onEnterPrevious(self, args):
         '''called when previous button on OSD is pressed'''
-        self._sendPostRequest(imcRequests['Input']['previous'])
+        self._sendPostRequest(imcRequests['Player']['Previous'])
+        self.btnPrevious.disable(None)
 
     def onEnterNext(self, args):
         '''called when next button on OSD is pressed'''
-        self._sendPostRequest(imcRequests['Input']['next'])
+        self._sendPostRequest(imcRequests['Player']['Next'])
+        self.btnNext.disable(None)
 
     def onEnterStop(self, args):
         self._sendPostRequest(imcRequests['Player']['Stop'])
+        self.btnStop.disable(None)
         self._osdWindowBack()
 
     def onEnterTimeselect(self, args):

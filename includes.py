@@ -127,7 +127,7 @@ defaultConf = {
         ],
         "set":[
             "amixer",
-            "sget",
+            "sset",
             "Master",
         ]
     },
@@ -155,6 +155,7 @@ defaultConf = {
 		115:"volumeup",
         116:"power", #remote powerbutton
 		158:"back", #browser back
+		164:"playpause", #play pause
 		172:"home", #home key
         272:"enter",#left mouse click
 
@@ -175,7 +176,7 @@ config = mergeConfig(defaultConf, configFile)
 
 def writeJson(path, dict):
         f = open(path, "w")
-        f.write(json.dumps(dict, sort_keys=True, indent=4))
+        f.write(json.dumps(dict, indent=4))
         f.close()
 
 def writeConfig():
