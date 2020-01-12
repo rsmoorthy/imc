@@ -27,14 +27,13 @@ class MenuShutdown(AnchorLayout):
 
     def _shutdown(self):
         os.system("sudo poweroff")
-        
+
 
     def _reboot(self):
         os.system("sudo reboot")
 
 
     def _cancel(self):
-        logging.error("cancel called | lastId =  {}".format(self.lastId))
         self.screenManger.current = "main_menu"
         self.screenManger.mainMenu.curId = self.lastId
         includes.screenSaver.enable()

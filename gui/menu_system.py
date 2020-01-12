@@ -96,14 +96,6 @@ class MenuSystem(StackLayout):
         except:
             logging.error("MenuSystem: could not start playback for auto restart")
 
-    #
-    # def _reboot(self, args):
-    #     logging.error("TODO: reboot the system")
-    #     #TODO: os.system("/sbin/reboot")
-    #
-    # def _shutdown(self, args):
-    #     self.mainMenu._powerOffShowMenu()
-
     def closeCrashMessage(self, args):
         if self.systemCrashHandl:
             self.systemCrashHandl(args)

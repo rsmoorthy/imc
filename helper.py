@@ -148,6 +148,5 @@ def timing(f):
         start = time()
         result = f(*args, **kwargs)
         end = time()
-        logging.error('§§§§§§§§§§§§§§§§§§§§§§§§§§§§: Elapsed time: {}'.format(end-start))
         return result
     return wrapper

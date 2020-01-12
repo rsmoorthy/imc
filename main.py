@@ -128,8 +128,7 @@ class IshaWm():
 
                     if cmd == 'osdTop':
                         self.osdTop()
-                        #logging.error("Bring OSD to the top")
-
+                        
                     elif cmd == 'osdBackground':
                         self.osdBackground()
 

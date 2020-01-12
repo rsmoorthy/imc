@@ -75,25 +75,12 @@ class TimeSelect(StackLayout):
 
     lastIsDisabled = False
     def right(self, args):
-        logging.error("right called -- wid={}".format(self.wId))
 
         if self.wId < 0:
             self.wId = 0
             self.widgets[self.wId].enable(None)
 
         else:
-            # if self.wId > len(self.widgets)-1:
-            #     logging.error("right last wid called")
-            #
-            #     if not self.lastIsDisabled:
-            #         self.lastIsDisabled = True
-            #         self.widgets[self.wId].disable(None)
-            #         self.wId = self.wId + 1
-            #
-            #     return True
-            # else:
-            #     self.lastIsDisabled = False
-
             self.widgets[self.wId].disable(None)
             self.wId = clipInt(self.wId + 1, 0, len(self.widgets)-1)
             self.widgets[self.wId].enable(None)

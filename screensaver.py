@@ -60,7 +60,6 @@ class ScreenSaver():
                         self.active = False
                         self.screenManager.current = self.blackScreenName
                     elif cmd['mode'] == 1:#enable screen saver and show main menu
-                        logging.error("Thomas: Screensaver switch mode == 1")
                         self.ena = True
                         self.idleCounter = 0
                         self.active = False

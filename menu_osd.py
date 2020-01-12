@@ -210,11 +210,9 @@ class MenuOSD(StackLayout):
         self.totaltime.opacity = opac
 
     def _osdWindowFront(self):
-        logging.error("Thomas: _osdWindowFront")
         self.ipc.sendCmd({'cmd':'osdTop'},  includes.config['ipcWmPort'])
 
     def _osdWindowBack(self):
-        logging.error("Thomas: _osdWindowBack")
         self.ipc.sendCmd({'cmd':'osdBackground'}, includes.config['ipcWmPort'])
 
     def _osdguiManager(self):
