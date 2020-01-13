@@ -257,6 +257,7 @@ class MainMenu(ImcTabview):
         self.selectableWidgets = {}
         self.keyDownSemaphore = threading.Semaphore()
         self.curId = 0
+        self.lastId = 0
         self.controlTree = control_tree.CONTROL_TREE
 
 
@@ -272,6 +273,7 @@ class MainMenu(ImcTabview):
             writeDb=includes.writeDb,
             db=includes.db
         )
+        includes.playerCore.setPlayer(includes.config['settings']['player'])
         includes.playerCore.activateColorBar = includes.changeFooterColor
         includes.playerCore.screenSaverRun = self.screenSaver.swtich
         # includes.playerCore.osdEnable = self.osdEnable

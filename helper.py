@@ -107,7 +107,7 @@ def rotateInt(value, min, max):
     return value
 
 def getDisplaySize():
-    import Xlib
+    import Xlib.display
     display = Xlib.display.Display()
     root = display.screen().root
     return (root.get_geometry().width, root.get_geometry().height)

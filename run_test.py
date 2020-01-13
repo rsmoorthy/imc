@@ -1,7 +1,8 @@
 from gui.file_list import fileListTest
 import gui.playlist_viewer as plviewer
-from gui.selectable_items import testImageBg
 import sys
+
+
 
 
 if sys.argv[1] == "filelist":
@@ -12,8 +13,6 @@ if sys.argv[1] == "playlistview":
     plviewer.test()
 
 
-if sys.argv[1] == "imagebg":
-    testImageBg()
 
 if sys.argv[1] == "selectviewItem":
     from gui.select_list_view import TestSelectListviewItem
@@ -25,4 +24,8 @@ if sys.argv[1] == "osdctrl":
 
 if sys.argv[1] == "volumemain":
     from gui.volume_widget import TestVolumeIndicatorMain as test
+    test()
+
+if sys.argv[1] == "vlc":
+    from player.vlc_player import test
     test()

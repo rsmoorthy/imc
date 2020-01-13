@@ -237,6 +237,7 @@ class MenuSettings(GridLayout):
         for i in range(self.stimeStart, self.stimeEnd):
             self.sliderSaver.add(str(i), _updateSaverTime)
 
+        self.sliderSaver.switch(str(includes.config['settings']['screensaverTime']))
         self.widgets.append(self.sliderSaver)
         #
         # OSD Time
@@ -256,8 +257,30 @@ class MenuSettings(GridLayout):
         for i in range(self.stimeStart, self.stimeEnd):
             self.osdTime.add(str(i), _updateOsdTime)
 
+        self.osdTime.switch(str(includes.config['settings']['osdTime']))
+
         self.widgets.append(self.osdTime)
 
+        #
+        # Player selection
+        #
+        def _setPlayerVlc():
+            includes.playerCore.setPlayer('vlc')
+
+        def _setPlayerMpv():
+            includes.playerCore.setPlayer('mpv')
+
+        self.playerSelection = SelectSpinner(
+            size_hint_x=None,
+            width=250,
+            size_hint_y=None,
+            height=self.itemHeight,
+            text="Player Selection"
+        )
+        self.playerSelection.add("vlc", _setPlayerVlc)
+        self.playerSelection.add("mpv", _setPlayerMpv)
+        self.playerSelection.switch(includes.config['settings']['player'])
+        self.widgets.append(self.playerSelection)
         #
         # Store button
         #

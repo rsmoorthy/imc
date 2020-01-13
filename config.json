@@ -15,13 +15,14 @@
         "autoplay": "false"
     },
     "settings": {
-        "osdTime": 5,
+        "osdTime": 10,
         "runtimeInterval": 1,
-        "screensaverTime": 5,
+        "screensaverTime": 10,
         "hdmiBoost": 4,
         "audioSource": 0,
         "hdmiResolution": 0,
-        "volIncVal": 5
+        "volIncVal": 5,
+        "player": "vlc"
     },
     "httpServerIp": {
         "ip": "127.0.0.1",
@@ -38,25 +39,24 @@
             "--really-quiet",
             "--no-osc",
             "--no-input-terminal",
-            "--input-ipc-server={socket}",
-            "--gpu-context=x11"
+            "--input-ipc-server={socket}"
         ]
     },
     "amixer": {
         "get": [
             "amixer",
             "sget",
-            "PCM"
+            "Master"
         ],
         "set": [
             "amixer",
             "sset",
-            "PCM"
+            "Master"
         ]
     },
     "ipcOsdPort": 40001,
     "ipcWmPort": 40002,
-    "hdmiCfgPath": "/boot/imc_hdmi.txt",
+    "hdmiCfgPath": "/tmp/imc_hdmi.txt",
     "scancodes": {
         "1": "esc",
         "14": "back",
@@ -79,28 +79,6 @@
         "116": "power",
         "158": "back",
         "164": "playpause",
-        "172": "home",
-        "272": "enter",
-        "1": "esc",
-        "14": "back",
-        "25": "power",
-        "27": "volumeup",
-        "28": "enter",
-        "35": "home",
-        "50": "mute",
-        "53": "volumedown",
-        "88": "home",
-        "103": "up",
-        "104": "pgup",
-        "105": "left",
-        "106": "right",
-        "108": "down",
-        "109": "pgdown",
-        "113": "mute",
-        "114": "volumedown",
-        "115": "volumeup",
-        "116": "power",
-        "158": "back",
         "172": "home",
         "272": "enter"
     }

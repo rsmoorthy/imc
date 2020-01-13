@@ -98,6 +98,7 @@ defaultConf = {
         "audioSource":0,
         "hdmiResolution":0,
         "volIncVal":5,
+        "player":"vlc"
     },
     "httpServerIp":{
         "ip":"127.0.0.1",
