@@ -1,7 +1,7 @@
 # import mpv_player
 # import vlc_player
 import player.mpv_player_v0 as mpv_player_v0
-import player.vlc_player  as vlc_player
+#import player.vlc_player  as vlc_player
 import time
 import threading
 import logging
@@ -322,7 +322,7 @@ class PlayerCore():
 
         elif player ==  'vlc':
             del self.player
-            self.player = vlc_player.Player()
+            self.player = mpv_player_v0.Player() #TODO: enable vlc player later but for now we need test system which runs so we only use mpv:: vlc_player.Player()
             self.player.addEndHandler(self.onPlayEnd)
 
         else:
@@ -335,7 +335,7 @@ class PlayerCore():
         self._runtimeInterval = kwargs.pop('runtimeInterval', 1)
         self._db = kwargs.pop('db', None)
         self._writeDb = kwargs.pop('writeDb', None)
-    
+
         self.player = mpv_player_v0.Player() #TODO: In the fucture we could maske this selection via settings to chooce differernt players.
         self.player.addEndHandler(self.onPlayEnd)
 
